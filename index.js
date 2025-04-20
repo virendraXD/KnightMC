@@ -2,6 +2,11 @@ const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 
+const express = require('express');
+const app = express();
+app.get('/', (req, res) => res.send('KnightMC is alive!'));
+app.listen(3000, () => console.log('Web server running!'));
+
 const app = express();
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
