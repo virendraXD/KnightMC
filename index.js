@@ -1,31 +1,38 @@
+const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+const app = express();
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+const PORT = process.env.PORT || 3000;
+const CHANNEL_ID = process.env.CHANNEL_ID;
+
+app.use(express.json());
+
+app.post('/uptime-robot-webhook', async (req, res) => {
+    const status = req.body.status;
+    const channel = await client.channels.fetch(CHANNEL_ID);
+    
+    if (status === 0) {
+        channel.send('🚨 The monitored service is DOWN!');
+    } else if (status === 1) {
+        channel.send('✅ The monitored service is UP!');
+    }
+
+    res.status(200).send('Received');
+});
+
+app.get('/', (req, res) => {
+    res.send('Bot is running!');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 client.once('ready', () => {
-  console.log(`KnightMC is online as ${client.user.tag}`);
-  client.user.setActivity('your Minecraft server', { type: 'WATCHING' });
+    console.log(`🤖 Logged in as ${client.user.tag}`);
 });
 
-// Ping command
-client.on('messageCreate', message => {
-  if (message.author.bot) return;
-  if (message.content === '!ping') {
-    message.reply('Pong!');
-  }
-});
-
-// Keep-alive server
-const express = require('express');
-const app = express();
-app.get('/', (req, res) => res.send('KnightMC is alive buddy!'));
-app.listen(3000, () => console.log('Web server is running.'));
-
-client.login(process.env.TOKEN);
+client.login(process.env.DISCORD_TOKEN);
