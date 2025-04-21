@@ -1,152 +1,1002 @@
 [
   {
-    "question": "What block do you need to make a Nether portal?",
-    "options": ["End Stone", "Obsidian", "Netherrack", "Bedrock"],
-    "answer": 1
+      "question": "What do you use to mine Obsidian? (1)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
   },
   {
-    "question": "Which mob explodes when it gets near you?",
-    "options": ["Skeleton", "Zombie", "Creeper", "Spider"],
-    "answer": 2
+      "question": "Which mob drops Ender Pearls? (2)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
   },
   {
-    "question": "What do you use to tame a wolf?",
-    "options": ["Fish", "Beef", "Bone", "Carrot"],
-    "answer": 2
+      "question": "What material do you need to make a Nether Portal? (3)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
   },
   {
-    "question": "What is the rarest ore in Minecraft?",
-    "options": ["Iron", "Coal", "Diamond", "Emerald"],
-    "answer": 3
+      "question": "Which of these is not tamable in Minecraft? (4)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
   },
   {
-    "question": "What does a sheep drop?",
-    "options": ["Wool", "Leather", "Feather", "String"],
-    "answer": 0
+      "question": "How many blocks make a full Beacon pyramid? (5)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
   },
   {
-    "question": "Which tool is best for mining stone?",
-    "options": ["Axe", "Shovel", "Pickaxe", "Hoe"],
-    "answer": 2
+      "question": "What does a Creeper drop when killed? (6)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
   },
   {
-    "question": "What do you trade with villagers?",
-    "options": ["Coal", "Diamonds", "Emeralds", "Gold"],
-    "answer": 2
+      "question": "What\u2019s the max number of blocks a piston can push? (7)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
   },
   {
-    "question": "Which mob shoots arrows?",
-    "options": ["Zombie", "Skeleton", "Enderman", "Slime"],
-    "answer": 1
+      "question": "Which dimension has the End City? (8)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
   },
   {
-    "question": "How do you cure a zombie villager?",
-    "options": ["Milk", "Golden Apple and Weakness", "Potion of Healing", "Carrot"],
-    "answer": 1
+      "question": "Which of these is a hostile mob? (9)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
   },
   {
-    "question": "What item lets you respawn in the Nether?",
-    "options": ["Beacon", "Totem of Undying", "Respawn Anchor", "Ender Chest"],
-    "answer": 2
+      "question": "What happens when a Ghast fireball hits a portal? (10)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
   },
   {
-    "question": "What happens if you sleep in the Nether?",
-    "options": ["Set spawn", "Heal", "Explode", "Nothing"],
-    "answer": 2
+      "question": "What do you use to mine Obsidian? (11)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
   },
   {
-    "question": "What mob drops ender pearls?",
-    "options": ["Enderman", "Zombie", "Witch", "Ghast"],
-    "answer": 0
+      "question": "Which mob drops Ender Pearls? (12)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
   },
   {
-    "question": "How do you make glass?",
-    "options": ["Smelt Sand", "Smelt Gravel", "Smelt Dirt", "Smelt Clay"],
-    "answer": 0
+      "question": "What material do you need to make a Nether Portal? (13)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
   },
   {
-    "question": "What block can push other blocks?",
-    "options": ["Redstone Block", "Lever", "Piston", "Button"],
-    "answer": 2
+      "question": "Which of these is not tamable in Minecraft? (14)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
   },
   {
-    "question": "Which mob lives in the End dimension?",
-    "options": ["Wither", "Blaze", "Ender Dragon", "Warden"],
-    "answer": 2
+      "question": "How many blocks make a full Beacon pyramid? (15)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
   },
   {
-    "question": "How many obsidian blocks are needed for a basic Nether portal frame?",
-    "options": ["10", "14", "12", "16"],
-    "answer": 0
+      "question": "What does a Creeper drop when killed? (16)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
   },
   {
-    "question": "Which mob drops blaze rods?",
-    "options": ["Blaze", "Ghast", "Zombie Pigman", "Skeleton"],
-    "answer": 0
+      "question": "What\u2019s the max number of blocks a piston can push? (17)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
   },
   {
-    "question": "What enchantment lets you walk on water?",
-    "options": ["Depth Strider", "Frost Walker", "Aqua Affinity", "Feather Falling"],
-    "answer": 1
+      "question": "Which dimension has the End City? (18)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
   },
   {
-    "question": "Which material makes the strongest armor?",
-    "options": ["Iron", "Gold", "Diamond", "Netherite"],
-    "answer": 3
+      "question": "Which of these is a hostile mob? (19)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
   },
   {
-    "question": "What food restores the most hunger?",
-    "options": ["Steak", "Golden Apple", "Cake", "Bread"],
-    "answer": 0
+      "question": "What happens when a Ghast fireball hits a portal? (20)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
   },
   {
-    "question": "Which mob is immune to fire?",
-    "options": ["Zombie", "Blaze", "Skeleton", "Enderman"],
-    "answer": 1
+      "question": "What do you use to mine Obsidian? (21)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
   },
   {
-    "question": "Which biome has the most trees?",
-    "options": ["Desert", "Jungle", "Savanna", "Plains"],
-    "answer": 1
+      "question": "Which mob drops Ender Pearls? (22)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
   },
   {
-    "question": "What is the name of the final boss?",
-    "options": ["Wither", "Warden", "Dragon King", "Ender Dragon"],
-    "answer": 3
+      "question": "What material do you need to make a Nether Portal? (23)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
   },
   {
-    "question": "What tool do you use to get honey from a beehive safely?",
-    "options": ["Bucket", "Axe", "Shears", "Glass Bottle with Campfire"],
-    "answer": 3
+      "question": "Which of these is not tamable in Minecraft? (24)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
   },
   {
-    "question": "What item allows Elytra to fly?",
-    "options": ["Gunpowder", "Redstone", "Firework Rocket", "Feather"],
-    "answer": 2
+      "question": "How many blocks make a full Beacon pyramid? (25)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
   },
   {
-    "question": "How do you get to The End?",
-    "options": ["End Portal", "Nether Portal", "Magic Door", "Stronghold Key"],
-    "answer": 0
+      "question": "What does a Creeper drop when killed? (26)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
   },
   {
-    "question": "Which mob drops string?",
-    "options": ["Spider", "Skeleton", "Slime", "Zombie"],
-    "answer": 0
+      "question": "What\u2019s the max number of blocks a piston can push? (27)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
   },
   {
-    "question": "Which enchantment increases mining speed?",
-    "options": ["Silk Touch", "Fortune", "Unbreaking", "Efficiency"],
-    "answer": 3
+      "question": "Which dimension has the End City? (28)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
   },
   {
-    "question": "Which is not a type of wood?",
-    "options": ["Birch", "Oak", "Quartz", "Spruce"],
-    "answer": 2
+      "question": "Which of these is a hostile mob? (29)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
   },
   {
-    "question": "What happens when you stare at an Enderman?",
-    "options": ["It smiles", "It teleports away", "It becomes friendly", "It attacks you"],
-    "answer": 3
+      "question": "What happens when a Ghast fireball hits a portal? (30)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (31)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (32)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (33)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (34)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (35)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (36)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (37)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (38)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (39)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (40)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (41)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (42)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (43)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (44)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (45)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (46)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (47)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (48)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (49)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (50)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (51)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (52)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (53)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (54)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (55)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (56)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (57)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (58)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (59)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (60)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (61)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (62)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (63)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (64)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (65)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (66)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (67)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (68)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (69)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (70)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (71)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (72)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (73)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (74)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (75)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (76)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (77)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (78)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (79)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (80)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (81)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (82)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (83)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (84)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (85)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (86)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (87)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (88)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (89)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (90)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What do you use to mine Obsidian? (91)",
+      "options": [
+          "Iron Pickaxe",
+          "Diamond Pickaxe",
+          "Gold Pickaxe",
+          "Wooden Pickaxe"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "Which mob drops Ender Pearls? (92)",
+      "options": [
+          "Zombie",
+          "Skeleton",
+          "Enderman",
+          "Creeper"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What material do you need to make a Nether Portal? (93)",
+      "options": [
+          "Obsidian",
+          "Stone",
+          "Sand",
+          "Quartz"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which of these is not tamable in Minecraft? (94)",
+      "options": [
+          "Wolf",
+          "Cat",
+          "Pig",
+          "Parrot"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "How many blocks make a full Beacon pyramid? (95)",
+      "options": [
+          "81",
+          "164",
+          "244",
+          "92"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What does a Creeper drop when killed? (96)",
+      "options": [
+          "Bones",
+          "Gunpowder",
+          "String",
+          "Ender Pearls"
+      ],
+      "answer": 1
+  },
+  {
+      "question": "What\u2019s the max number of blocks a piston can push? (97)",
+      "options": [
+          "12",
+          "10",
+          "14",
+          "16"
+      ],
+      "answer": 0
+  },
+  {
+      "question": "Which dimension has the End City? (98)",
+      "options": [
+          "Overworld",
+          "Nether",
+          "End",
+          "Skylands"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "Which of these is a hostile mob? (99)",
+      "options": [
+          "Cow",
+          "Villager",
+          "Spider",
+          "Sheep"
+      ],
+      "answer": 2
+  },
+  {
+      "question": "What happens when a Ghast fireball hits a portal? (100)",
+      "options": [
+          "It explodes",
+          "It lights the portal",
+          "It teleports",
+          "Nothing"
+      ],
+      "answer": 1
   }
 ]

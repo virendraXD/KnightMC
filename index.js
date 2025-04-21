@@ -111,10 +111,10 @@ client.on('messageCreate', async (message) => {
             }
 
             if (userAnswer - 1 === quiz.answer) {
-                await message.channel.send(`✅ Correct, ${message.author}!`);
+                await message.channel.send(`✅ Correct, ${message.author} you gained 100 XP.`);
                 let user = await XP.findOne({ userId: message.author.id });
                 if (!user) user = new XP({ userId: message.author.id });
-                user.xp += 10;
+                user.xp += 100; // XP for correct answer
                 const newLevel = getLevel(user.xp);
                 if (newLevel > user.level) {
                     user.level = newLevel;
