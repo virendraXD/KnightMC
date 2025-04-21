@@ -44,7 +44,7 @@ app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-    res.send('KnightMC is alive!');
+    res.send('KnightMC is alive sir!');
 });
 
 // UptimeRobot route
