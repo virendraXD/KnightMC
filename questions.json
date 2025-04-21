@@ -13,5 +13,15 @@
     "question": "Which block can't be broken in survival?",
     "options": ["Bedrock", "Obsidian", "End Portal Frame", "Barrier"],
     "answer": 0
-  }
+  },
+    {
+        "question": "What do you need to make a Nether portal?",
+        "options": ["End Stone", "Obsidian", "Netherrack", "Bedrock"],
+        "answer": 1
+    },
+    {
+        "question": "Which mob explodes when it gets close?",
+        "options": ["Skeleton", "Zombie", "Creeper", "Spider"],
+        "answer": 2
+    }
 ]
