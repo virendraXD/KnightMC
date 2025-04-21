@@ -1,27 +1,152 @@
 [
   {
-    "question": "What do you need to craft a diamond pickaxe?",
-    "options": ["3 Diamonds + 2 Sticks", "2 Diamonds + 3 Sticks", "3 Iron + 2 Sticks", "3 Diamonds + 1 Stick"],
+    "question": "What block do you need to make a Nether portal?",
+    "options": ["End Stone", "Obsidian", "Netherrack", "Bedrock"],
+    "answer": 1
+  },
+  {
+    "question": "Which mob explodes when it gets near you?",
+    "options": ["Skeleton", "Zombie", "Creeper", "Spider"],
+    "answer": 2
+  },
+  {
+    "question": "What do you use to tame a wolf?",
+    "options": ["Fish", "Beef", "Bone", "Carrot"],
+    "answer": 2
+  },
+  {
+    "question": "What is the rarest ore in Minecraft?",
+    "options": ["Iron", "Coal", "Diamond", "Emerald"],
+    "answer": 3
+  },
+  {
+    "question": "What does a sheep drop?",
+    "options": ["Wool", "Leather", "Feather", "String"],
     "answer": 0
+  },
+  {
+    "question": "Which tool is best for mining stone?",
+    "options": ["Axe", "Shovel", "Pickaxe", "Hoe"],
+    "answer": 2
+  },
+  {
+    "question": "What do you trade with villagers?",
+    "options": ["Coal", "Diamonds", "Emeralds", "Gold"],
+    "answer": 2
+  },
+  {
+    "question": "Which mob shoots arrows?",
+    "options": ["Zombie", "Skeleton", "Enderman", "Slime"],
+    "answer": 1
+  },
+  {
+    "question": "How do you cure a zombie villager?",
+    "options": ["Milk", "Golden Apple and Weakness", "Potion of Healing", "Carrot"],
+    "answer": 1
+  },
+  {
+    "question": "What item lets you respawn in the Nether?",
+    "options": ["Beacon", "Totem of Undying", "Respawn Anchor", "Ender Chest"],
+    "answer": 2
+  },
+  {
+    "question": "What happens if you sleep in the Nether?",
+    "options": ["Set spawn", "Heal", "Explode", "Nothing"],
+    "answer": 2
   },
   {
     "question": "What mob drops ender pearls?",
-    "options": ["Enderman", "Zombie", "Skeleton", "Witch"],
+    "options": ["Enderman", "Zombie", "Witch", "Ghast"],
     "answer": 0
   },
   {
-    "question": "Which block can't be broken in survival?",
-    "options": ["Bedrock", "Obsidian", "End Portal Frame", "Barrier"],
+    "question": "How do you make glass?",
+    "options": ["Smelt Sand", "Smelt Gravel", "Smelt Dirt", "Smelt Clay"],
     "answer": 0
   },
-    {
-        "question": "What do you need to make a Nether portal?",
-        "options": ["End Stone", "Obsidian", "Netherrack", "Bedrock"],
-        "answer": 1
-    },
-    {
-        "question": "Which mob explodes when it gets close?",
-        "options": ["Skeleton", "Zombie", "Creeper", "Spider"],
-        "answer": 2
-    }
+  {
+    "question": "What block can push other blocks?",
+    "options": ["Redstone Block", "Lever", "Piston", "Button"],
+    "answer": 2
+  },
+  {
+    "question": "Which mob lives in the End dimension?",
+    "options": ["Wither", "Blaze", "Ender Dragon", "Warden"],
+    "answer": 2
+  },
+  {
+    "question": "How many obsidian blocks are needed for a basic Nether portal frame?",
+    "options": ["10", "14", "12", "16"],
+    "answer": 0
+  },
+  {
+    "question": "Which mob drops blaze rods?",
+    "options": ["Blaze", "Ghast", "Zombie Pigman", "Skeleton"],
+    "answer": 0
+  },
+  {
+    "question": "What enchantment lets you walk on water?",
+    "options": ["Depth Strider", "Frost Walker", "Aqua Affinity", "Feather Falling"],
+    "answer": 1
+  },
+  {
+    "question": "Which material makes the strongest armor?",
+    "options": ["Iron", "Gold", "Diamond", "Netherite"],
+    "answer": 3
+  },
+  {
+    "question": "What food restores the most hunger?",
+    "options": ["Steak", "Golden Apple", "Cake", "Bread"],
+    "answer": 0
+  },
+  {
+    "question": "Which mob is immune to fire?",
+    "options": ["Zombie", "Blaze", "Skeleton", "Enderman"],
+    "answer": 1
+  },
+  {
+    "question": "Which biome has the most trees?",
+    "options": ["Desert", "Jungle", "Savanna", "Plains"],
+    "answer": 1
+  },
+  {
+    "question": "What is the name of the final boss?",
+    "options": ["Wither", "Warden", "Dragon King", "Ender Dragon"],
+    "answer": 3
+  },
+  {
+    "question": "What tool do you use to get honey from a beehive safely?",
+    "options": ["Bucket", "Axe", "Shears", "Glass Bottle with Campfire"],
+    "answer": 3
+  },
+  {
+    "question": "What item allows Elytra to fly?",
+    "options": ["Gunpowder", "Redstone", "Firework Rocket", "Feather"],
+    "answer": 2
+  },
+  {
+    "question": "How do you get to The End?",
+    "options": ["End Portal", "Nether Portal", "Magic Door", "Stronghold Key"],
+    "answer": 0
+  },
+  {
+    "question": "Which mob drops string?",
+    "options": ["Spider", "Skeleton", "Slime", "Zombie"],
+    "answer": 0
+  },
+  {
+    "question": "Which enchantment increases mining speed?",
+    "options": ["Silk Touch", "Fortune", "Unbreaking", "Efficiency"],
+    "answer": 3
+  },
+  {
+    "question": "Which is not a type of wood?",
+    "options": ["Birch", "Oak", "Quartz", "Spruce"],
+    "answer": 2
+  },
+  {
+    "question": "What happens when you stare at an Enderman?",
+    "options": ["It smiles", "It teleports away", "It becomes friendly", "It attacks you"],
+    "answer": 3
+  }
 ]
