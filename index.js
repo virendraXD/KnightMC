@@ -1,9 +1,8 @@
 const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
+const mongoose = require('mongoose');
 const fs = require('fs');
 require('dotenv').config();
-
-const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
 
 const app = express();
 const client = new Client({
@@ -13,6 +12,20 @@ const client = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
+
+// MongoDB Setup
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB Connected!'))
+    .catch(err => console.log(err));
+
+// Define MongoDB Schema
+const xpSchema = new mongoose.Schema({
+    userId: { type: String, required: true, unique: true },
+    xp: { type: Number, default: 0 },
+    level: { type: Number, default: 0 }
+});
+
+const XP = mongoose.model('XP', xpSchema);
 
 const PORT = process.env.PORT || 3000;
 const CHANNEL_ID = process.env.CHANNEL_ID;
@@ -43,16 +56,7 @@ app.post('/uptime-robot-webhook', async (req, res) => {
     }
 });
 
-// XP System Functions
-function loadXP() {
-    if (!fs.existsSync('xp.json')) fs.writeFileSync('xp.json', '{}');
-    return JSON.parse(fs.readFileSync('xp.json', 'utf8'));
-}
-
-function saveXP(data) {
-    fs.writeFileSync('xp.json', JSON.stringify(data, null, 2));
-}
-
+// Get level based on XP
 function getLevel(xp) {
     return Math.floor(Math.sqrt(xp) / 10);
 }
@@ -61,9 +65,6 @@ function getLevel(xp) {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    const xpData = loadXP();
-    const userId = message.author.id;
-
     // !ping command
     if (message.content === '!ping') {
         return message.reply('Pong!');
@@ -71,83 +72,41 @@ client.on('messageCreate', async (message) => {
 
     // !rank command
     if (message.content === '!rank') {
-        const user = xpData[userId] || { xp: 0, level: 0 };
+        const user = await XP.findOne({ userId: message.author.id });
+        if (!user) {
+            return message.reply("You don't have any XP yet.");
+        }
+
         return message.reply(`**${message.author.username}** | Level: \`${user.level}\` | XP: \`${user.xp}\``);
     }
 
     // !top command
     if (message.content === '!top') {
-        const leaderboard = Object.entries(xpData)
-            .map(([id, data]) => ({
-                id,
-                xp: data.xp,
-                level: data.level
-            }))
-            .sort((a, b) => b.xp - a.xp)
-            .slice(0, 5);
-
-        const formatted = await Promise.all(
-            leaderboard.map(async (user, i) => {
-                try {
-                    const member = await message.guild.members.fetch(user.id);
-                    return `#${i + 1} — **${member.user.username}** | Level: ${user.level}, XP: ${user.xp}`;
-                } catch {
-                    return `#${i + 1} — Unknown User | Level: ${user.level}, XP: ${user.xp}`;
-                }
-            })
-        );
+        const leaderboard = await XP.find().sort({ xp: -1 }).limit(5);
+        const formatted = leaderboard.map((user, i) => {
+            return `#${i + 1} — **${user.userId}** | Level: ${user.level}, XP: ${user.xp}`;
+        });
 
         return message.channel.send(`**XP Leaderboard**\n${formatted.join('\n')}`);
     }
 
-    // !quiz command
-    if (message.content === '!quiz') {
-        const quiz = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
-        let optionsText = quiz.options.map((opt, index) => `**${index + 1}.** ${opt}`).join('\n');
+    // Handle XP gain
+    let user = await XP.findOne({ userId: message.author.id });
 
-        await message.channel.send(
-            `**Minecraft Quiz:**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1-4)_`
-        );
-
-        const filter = m => m.author.id === message.author.id;
-        const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
-
-        collector.on('collect', collected => {
-            const userAnswer = parseInt(collected.content);
-            if (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 4) {
-                return message.channel.send("Invalid answer! Please enter a number between 1 and 4.");
-            }
-
-            if (userAnswer - 1 === quiz.answer) {
-                message.channel.send(`✅ Correct, ${message.author}!`);
-            } else {
-                message.channel.send(`❌ Wrong! The correct answer was **${quiz.options[quiz.answer]}**.`);
-            }
-        });
-
-        collector.on('end', collected => {
-            if (collected.size === 0) {
-                message.channel.send("⏰ Time's up! You didn't answer in time.");
-            }
-        });
-    }
-
-    // XP Gain
-    if (!xpData[userId]) {
-        xpData[userId] = { xp: 0, level: 0 };
+    if (!user) {
+        user = new XP({ userId: message.author.id });
     }
 
     const xpGain = Math.floor(Math.random() * 6) + 5; // Random XP between 5–10
-    xpData[userId].xp += xpGain;
+    user.xp += xpGain;
 
-    const newLevel = getLevel(xpData[userId].xp);
-
-    if (newLevel > xpData[userId].level) {
-        xpData[userId].level = newLevel;
+    const newLevel = getLevel(user.xp);
+    if (newLevel > user.level) {
+        user.level = newLevel;
         await message.channel.send(`**GG ${message.author}, you leveled up to ${newLevel}!**`);
     }
 
-    saveXP(xpData);
+    await user.save();
 });
 
 // Error logging
