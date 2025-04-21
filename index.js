@@ -1,8 +1,8 @@
-require('dotenv').config();
-
+require('dotenv').config(); // Load secrets from Replit Secrets tab
 const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const app = express();
 const client = new Client({
@@ -13,17 +13,24 @@ const client = new Client({
     ]
 });
 
+// Debugging: Print MONGO_URI to check if it's loaded
+if (!process.env.MONGO_URI) {
+    console.error("❌ MONGO_URI is undefined! Check your Replit secrets.");
+    process.exit(1);
+} else {
+    console.log('🔍 MONGO_URI loaded successfully.');
+}
+
 // MongoDB connection
-console.log('MONGO_URI:', process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-.then(() => console.log('✅ MongoDB Connected!'))
-.catch(err => {
-    console.error('❌ MongoDB Connection Error:', err);
-    process.exit(1);
-});
+    .then(() => console.log('✅ MongoDB Connected!'))
+    .catch(err => {
+        console.error('❌ MongoDB Connection Error:', err);
+        process.exit(1);
+    });
 
 // MongoDB XP schema
 const xpSchema = new mongoose.Schema({
@@ -33,8 +40,7 @@ const xpSchema = new mongoose.Schema({
 });
 const XP = mongoose.model('XP', xpSchema);
 
-// Quiz questions (from local file)
-const fs = require('fs');
+// Quiz questions
 const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
 
 const PORT = process.env.PORT || 3000;
@@ -42,12 +48,10 @@ const CHANNEL_ID = process.env.CHANNEL_ID;
 
 app.use(express.json());
 
-// Root route
 app.get('/', (req, res) => {
     res.send('KnightMC is alive sir!');
 });
 
-// UptimeRobot route
 app.post('/uptime-robot-webhook', async (req, res) => {
     const status = req.body.status;
     try {
@@ -61,30 +65,21 @@ app.post('/uptime-robot-webhook', async (req, res) => {
     }
 });
 
-// XP to level logic
 function getLevel(xp) {
     return Math.floor(Math.sqrt(xp) / 10);
 }
 
-// Discord message handler
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // !ping
-    if (message.content === '!ping') {
-        return message.reply('🏓 Pong!');
-    }
+    if (message.content === '!ping') return message.reply('🏓 Pong!');
 
-    // !rank
     if (message.content === '!rank') {
         const user = await XP.findOne({ userId: message.author.id });
-        if (!user) {
-            return message.reply("You don't have any XP yet.");
-        }
+        if (!user) return message.reply("You don't have any XP yet.");
         return message.reply(`**${message.author.username}** | Level: \`${user.level}\` | XP: \`${user.xp}\``);
     }
 
-    // !top
     if (message.content === '!top') {
         const leaderboard = await XP.find().sort({ xp: -1 }).limit(5);
         const formatted = await Promise.all(leaderboard.map(async (user, i) => {
@@ -98,13 +93,12 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`**🏆 XP Leaderboard**\n${formatted.join('\n')}`);
     }
 
-    // !quiz
     if (message.content === '!quiz') {
         const quiz = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
         const optionsText = quiz.options.map((opt, index) => `**${index + 1}.** ${opt}`).join('\n');
 
         await message.channel.send(
-            `🧠 **Minecraft Quiz**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1-4)_`
+            `🧠 **Minecraft Quiz**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1–4)_`
         );
 
         const filter = m => m.author.id === message.author.id;
@@ -141,7 +135,7 @@ client.on('messageCreate', async (message) => {
         return;
     }
 
-    // XP gain for regular messages
+    // XP for regular messages
     let user = await XP.findOne({ userId: message.author.id });
     if (!user) user = new XP({ userId: message.author.id });
 
@@ -157,7 +151,7 @@ client.on('messageCreate', async (message) => {
     await user.save();
 });
 
-// Start Express server
+// Express server
 app.listen(PORT, () => {
     console.log(`🚀 Web server running on port ${PORT}`);
 });
