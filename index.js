@@ -1,3 +1,5 @@
+const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
+
 const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
@@ -112,6 +114,38 @@ client.on('messageCreate', async (message) => {
         xpData[userId].level = newLevel;
         await message.channel.send(`**GG ${message.author}, you leveled up to ${newLevel}!**`);
     }
+
+if (message.content === '!quiz') {
+    const quiz = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
+    let optionsText = quiz.options.map((opt, index) => `**${index + 1}.** ${opt}`).join('\n');
+
+    await message.channel.send(
+        `**Minecraft Quiz:**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1-4)_`
+    );
+
+    const filter = m => m.author.id === message.author.id;
+    const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
+
+    collector.on('collect', collected => {
+        const userAnswer = parseInt(collected.content);
+        if (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 4) {
+            return message.channel.send("Invalid answer! Please enter a number between 1 and 4.");
+        }
+
+        if (userAnswer - 1 === quiz.answer) {
+            message.channel.send(`✅ Correct, ${message.author}!`);
+        } else {
+            message.channel.send(`❌ Wrong! The correct answer was **${quiz.options[quiz.answer]}**.`);
+        }
+    });
+
+    collector.on('end', collected => {
+        if (collected.size === 0) {
+            message.channel.send("⏰ Time's up! You didn't answer in time.");
+        }
+    });
+}
+
 
     saveXP(xpData);
 });
