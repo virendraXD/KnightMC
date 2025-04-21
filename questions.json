@@ -1,0 +1,17 @@
+[
+  {
+    "question": "What do you need to craft a diamond pickaxe?",
+    "options": ["3 Diamonds + 2 Sticks", "2 Diamonds + 3 Sticks", "3 Iron + 2 Sticks", "3 Diamonds + 1 Stick"],
+    "answer": 0
+  },
+  {
+    "question": "What mob drops ender pearls?",
+    "options": ["Enderman", "Zombie", "Skeleton", "Witch"],
+    "answer": 0
+  },
+  {
+    "question": "Which block can't be broken in survival?",
+    "options": ["Bedrock", "Obsidian", "End Portal Frame", "Barrier"],
+    "answer": 0
+  }
+]
