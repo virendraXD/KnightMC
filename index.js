@@ -3,6 +3,9 @@ const express = require('express');
 const { Client, GatewayIntentBits } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
+// Add at the top with other declarations
+const usedQuestionIndexes = new Set();
+
 
 const app = express();
 const client = new Client({
@@ -93,47 +96,58 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`**🏆 XP Leaderboard**\n${formatted.join('\n')}`);
     }
 
-    if (message.content === '!quiz') {
-        const quiz = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
-        const optionsText = quiz.options.map((opt, index) => `**${index + 1}.** ${opt}`).join('\n');
-
-        await message.channel.send(
-            `🧠 **Minecraft Quiz**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1–4)_`
-        );
-
-        const filter = m => m.author.id === message.author.id;
-        const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
-
-        collector.on('collect', async collected => {
-            const userAnswer = parseInt(collected.content);
-            if (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 4) {
-                return message.channel.send("❌ Invalid answer. Please enter a number between 1 and 4.");
-            }
-
-            if (userAnswer - 1 === quiz.answer) {
-                await message.channel.send(`✅ Correct, ${message.author} you gained 100 XP.`);
-                let user = await XP.findOne({ userId: message.author.id });
-                if (!user) user = new XP({ userId: message.author.id });
-                user.xp += 100; // XP for correct answer
-                const newLevel = getLevel(user.xp);
-                if (newLevel > user.level) {
-                    user.level = newLevel;
-                    await message.channel.send(`🎉 GG ${message.author}, you leveled up to ${newLevel}!`);
-                }
-                await user.save();
-            } else {
-                await message.channel.send(`❌ Wrong! The correct answer was **${quiz.options[quiz.answer]}**.`);
-            }
-        });
-
-        collector.on('end', collected => {
-            if (collected.size === 0) {
-                message.channel.send("⏰ Time's up! You didn't answer.");
-            }
-        });
-
-        return;
+ if (message.content === '!quiz') {
+    if (usedQuestionIndexes.size === quizQuestions.length) {
+        usedQuestionIndexes.clear(); // Reset when all questions used
     }
+
+    let index;
+    do {
+        index = Math.floor(Math.random() * quizQuestions.length);
+    } while (usedQuestionIndexes.has(index));
+
+    usedQuestionIndexes.add(index);
+    const quiz = quizQuestions[index];
+    const optionsText = quiz.options.map((opt, i) => `**${i + 1}.** ${opt}`).join('\n');
+
+    await message.channel.send(
+        `🧠 **Minecraft Quiz**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1–4)_`
+    );
+
+    const filter = m => m.author.id === message.author.id;
+    const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
+
+    collector.on('collect', async collected => {
+        const userAnswer = parseInt(collected.content);
+        if (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 4) {
+            return message.channel.send("❌ Invalid answer. Please enter a number between 1 and 4.");
+        }
+
+        if (userAnswer - 1 === quiz.answer) {
+            await message.channel.send(`✅ Correct, ${message.author} you gained 100 XP.`);
+            let user = await XP.findOne({ userId: message.author.id });
+            if (!user) user = new XP({ userId: message.author.id });
+            user.xp += 100;
+            const newLevel = getLevel(user.xp);
+            if (newLevel > user.level) {
+                user.level = newLevel;
+                await message.channel.send(`🎉 GG ${message.author}, you leveled up to ${newLevel}!`);
+            }
+            await user.save();
+        } else {
+            await message.channel.send(`❌ Wrong! The correct answer was **${quiz.options[quiz.answer]}**.`);
+        }
+    });
+
+    collector.on('end', collected => {
+        if (collected.size === 0) {
+            message.channel.send("⏰ Time's up! You didn't answer.");
+        }
+    });
+
+    return;
+}
+
 
     // XP for regular messages
     let user = await XP.findOne({ userId: message.author.id });
