@@ -120,9 +120,10 @@ if (message.content === '!quiz') {
     const embed = new EmbedBuilder()
         .setColor('#00ff00') // Green stripe on the side
 .setAuthor({ 
-    name: 'name: ':emoji_1: Minecraft Quiz Challenge', // This is a grass-like emoji (closest to Grass Block look)
-    iconURL: 'https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7?overlay' // Steve head
+    name: ':emoji_1: Minecraft Quiz Challenge',
+    iconURL: 'https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7?overlay'
 })
+
 
         .setDescription(`**${quiz.question}**\n\n${optionsText}\n\n_Reply with the option number (1–4)_`)
         .setFooter({ text: `You have 15 seconds to answer!` });
