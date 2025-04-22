@@ -119,11 +119,10 @@ if (message.content === '!quiz') {
 
     const embed = new EmbedBuilder()
         .setColor('#00ff00') // Green stripe on the side
-.setAuthor({ 
-    name: '<:emoji_1:1364220323221737606> Minecraft Quiz Challenge',
-    iconURL: 'https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7?overlay'
-})
-
+        .setAuthor({ 
+            name: 'Minecraft Quiz Challenge',
+            iconURL: 'https://cdn.discordapp.com/emojis/1364220323221737606.png'
+        })
 
         .setDescription(`**${quiz.question}**\n\n${optionsText}\n\n_Reply with the option number (1–4)_`)
         .setFooter({ text: `You have 15 seconds to answer!` });
