@@ -1,10 +1,12 @@
 require('dotenv').config(); // Load secrets from Replit Secrets tab
 const express = require('express');
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
+
 // Add at the top with other declarations
 const usedQuestionIndexes = new Set();
+
 
 
 const app = express();
@@ -101,7 +103,7 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`**🏆 XP Leaderboard**\n${formatted.join('\n')}`);
     }
 
- if (message.content === '!quiz') {
+if (message.content === '!quiz') {
     if (usedQuestionIndexes.size === quizQuestions.length) {
         usedQuestionIndexes.clear(); // Reset when all questions used
     }
@@ -115,9 +117,16 @@ client.on('messageCreate', async (message) => {
     const quiz = quizQuestions[index];
     const optionsText = quiz.options.map((opt, i) => `**${i + 1}.** ${opt}`).join('\n');
 
-    await message.channel.send(
-        `🧠 **Minecraft Quiz**\n${quiz.question}\n\n${optionsText}\n\n_Reply with the option number (1–4)_`
-    );
+    const embed = new EmbedBuilder()
+        .setColor('#00ff00') // Green stripe on the side
+        .setAuthor({ 
+            name: 'KnightMC Quiz Challenge',
+            iconURL: 'https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7?overlay' // Steve head
+        })
+        .setDescription(`**${quiz.question}**\n\n${optionsText}\n\n_Reply with the option number (1–4)_`)
+        .setFooter({ text: `You have 15 seconds to answer!` });
+
+    await message.channel.send({ embeds: [embed] });
 
     const filter = m => m.author.id === message.author.id;
     const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
@@ -152,7 +161,6 @@ client.on('messageCreate', async (message) => {
 
     return;
 }
-
 
     // XP for regular messages
     let user = await XP.findOne({ userId: message.author.id });
