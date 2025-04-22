@@ -39,7 +39,12 @@ mongoose.connect(process.env.MONGO_URI, {
 const xpSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     xp: { type: Number, default: 0 },
-    level: { type: Number, default: 0 }
+    level: { type: Number, default: 0 },
+    // Add in MongoDB schema
+    streak: { type: Number, default: 0 },
+    // Store `lastClaimed` date in user schema
+    lastDaily: { type: Date }
+
 });
 const XP = mongoose.model('XP', xpSchema);
 
