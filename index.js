@@ -3,6 +3,7 @@ const express = require('express');
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
+const quizCooldown = new Set();
 
 // Add at the top with other declarations
 const usedQuestionIndexes = new Set();
@@ -104,6 +105,12 @@ client.on('messageCreate', async (message) => {
     }
 
 if (message.content === '!quiz') {
+    if (quizCooldown.has(message.author.id)) {
+        return message.reply("⏳ Please wait before starting another quiz!");
+    }
+    quizCooldown.add(message.author.id);
+    setTimeout(() => quizCooldown.delete(message.author.id), 5000); // 5s cooldown
+
     if (usedQuestionIndexes.size === quizQuestions.length) {
         usedQuestionIndexes.clear(); // Reset when all questions used
     }
