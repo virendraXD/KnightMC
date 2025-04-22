@@ -120,7 +120,7 @@ if (message.content === '!quiz') {
     const embed = new EmbedBuilder()
         .setColor('#00ff00') // Green stripe on the side
 .setAuthor({ 
-    name: ':emoji_1: Minecraft Quiz Challenge',
+    name: '<:emoji_1:1364220323221737606> Minecraft Quiz Challenge',
     iconURL: 'https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7?overlay'
 })
 
