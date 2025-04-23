@@ -68,7 +68,7 @@ client.on('messageCreate', async (message) => {
         const content = message.content.toLowerCase();
 
         // Match: Done (60.775s)! For help, type "help" — ignoring extra spaces
-        if (/done\s*\(\d+\.\d+s\)!\s*For help, type "help"/i.test(content)) {
+        if (/\[.*info\s+server\].*done\s*\(\d+\.\d+s\)\s*!.*for help, type "help"/i.test(message.content)) {
             const owner = await client.users.fetch(OWNER_ID);
             await owner.send('✅ Minecraft server has fully started!');
         }
