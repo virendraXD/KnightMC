@@ -65,21 +65,19 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
 if (message.channel.id === CONSOLE_CHANNEL_ID) {
-    const content = message.content.toLowerCase();
+    // Strip triple backticks and whitespace
+    const rawContent = message.content.replace(/```/g, '').trim().toLowerCase();
 
-    // Temporary debug log
-    console.log("Console message:", content);
+    console.log("Stripped Console Message:", rawContent); // Optional debug
 
-    if (content.includes('done (') && content.includes('for help, type "help"')) {
+    if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
         const owner = await client.users.fetch(OWNER_ID);
         await owner.send('✅ Minecraft server has fully started!');
-        console.log("✅ Server start detected and message sent.");
     }
 
-    if (content.includes('stopping server') || content.includes('server shutting down')) {
+    if (rawContent.includes('stopping server') || rawContent.includes('server shutting down')) {
         const owner = await client.users.fetch(OWNER_ID);
         await owner.send('❌ Minecraft server is stopping!');
-        console.log("❌ Server stop detected and message sent.");
     }
 }
 
