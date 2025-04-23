@@ -65,13 +65,12 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
     // DiscordSRV log monitoring for server start/stop
-    if (message.channel.id === CONSOLE_CHANNEL_ID && SEND_SERVER_LOGS_TO_DM) {
-        const content = message.content.toLowerCase();
-        const owner = await client.users.fetch(OWNER_ID);
-
-        if (content.includes('server started') || content.includes('done')) {
-            await owner.send('✅ Minecraft server has started!');
+    if (message.channel.id === CONSOLE_CHANNEL_ID) {
+        if (/Done \(\d+\.\d+s\)! For help, type "help"/.test(message.content)) {
+            const owner = await client.users.fetch(OWNER_ID);
+            await owner.send('✅ Minecraft server has fully started!');
         }
+    }
 
         if (content.includes('stopping server') || content.includes('server shutting down')) {
             await owner.send('❌ Minecraft server is stopping!');
