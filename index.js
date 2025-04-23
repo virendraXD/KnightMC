@@ -64,17 +64,16 @@ function getLevel(xp) {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // Only monitor the console channel
     if (message.channel.id === CONSOLE_CHANNEL_ID) {
-        const content = message.content.toLowerCase(); // Normalize case
+        const content = message.content.toLowerCase();
 
-        // Server start detection
-        if (/Done \(\d+\.\d+s\)! For help, type "help"/i.test(content)) {
+        // Match: Done (60.775s)! For help, type "help" — ignoring extra spaces
+        if (/done\s*\(\d+\.\d+s\)\s*!\s*for help, type "help"/i.test(content)) {
             const owner = await client.users.fetch(OWNER_ID);
             await owner.send('✅ Minecraft server has fully started!');
         }
 
-        // Server stop detection (add more patterns if needed)
+        // Detect stopping phrases
         if (content.includes('stopping server') || content.includes('server shutting down')) {
             const owner = await client.users.fetch(OWNER_ID);
             await owner.send('❌ Minecraft server is stopping!');
