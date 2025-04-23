@@ -75,7 +75,7 @@ client.on('messageCreate', async (message) => {
         if (content.includes('stopping server') || content.includes('server shutting down')) {
             await owner.send('❌ Minecraft server is stopping!');
         }
-    }
+    
 
     if (message.content === '!ping') return message.reply('🏓 Pong!');
 
