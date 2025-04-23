@@ -64,19 +64,24 @@ function getLevel(xp) {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // DiscordSRV log monitoring for server start/stop
+    // Only monitor the console channel
     if (message.channel.id === CONSOLE_CHANNEL_ID) {
-        if (/Done \(\d+\.\d+s\)! For help, type "help"/.test(message.content)) {
+        const content = message.content.toLowerCase(); // Normalize case
+
+        // Server start detection
+        if (/Done \(\d+\.\d+s\)! For help, type "help"/i.test(content)) {
             const owner = await client.users.fetch(OWNER_ID);
             await owner.send('✅ Minecraft server has fully started!');
         }
-    }
 
+        // Server stop detection (add more patterns if needed)
         if (content.includes('stopping server') || content.includes('server shutting down')) {
+            const owner = await client.users.fetch(OWNER_ID);
             await owner.send('❌ Minecraft server is stopping!');
         }
-    
+    }
 
+    
     if (message.content === '!ping') return message.reply('🏓 Pong!');
 
     if (message.content === '!rank') {
