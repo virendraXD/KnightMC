@@ -233,7 +233,7 @@ app.post('/uptime-robot-webhook', async (req, res) => {
     try {
         const channel = await client.channels.fetch(CHANNEL_ID);
         if (status === 0) await channel.send('🚨 Service is DOWN!');
-        else if (status === 1) await channel.send('✅ Service is UP!');
+  else if (status === 1) await channel.send('✅ Service is UP!');
         res.status(200).send('Received');
     } catch (error) {
         console.error('Error sending status:', error);
