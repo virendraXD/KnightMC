@@ -9,7 +9,8 @@ const usedQuestionIndexes = new Set();
 
 const OWNER_ID = process.env.OWNER_ID;
 const PORT = process.env.PORT || 3000;
-const CHANNEL_ID = process.env.CHANNEL_ID;
+const CONSOLE_CHANNEL_ID = process.env.CONSOLE_CHANNEL_ID;
+const SEND_SERVER_LOGS_TO_DM = process.env.SEND_SERVER_LOGS_TO_DM === 'true';
 const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
 
 const app = express();
@@ -46,7 +47,7 @@ app.get('/', (req, res) => res.send('KnightMC is alive sir!'));
 app.post('/uptime-robot-webhook', async (req, res) => {
     const status = req.body.status;
     try {
-        const channel = await client.channels.fetch(CHANNEL_ID);
+        const channel = await client.channels.fetch(CONSOLE_CHANNEL_ID);
         if (status === 0) await channel.send('🚨 Service is DOWN!');
         else if (status === 1) await channel.send('✅ Service is UP!');
         res.status(200).send('Received');
@@ -62,6 +63,20 @@ function getLevel(xp) {
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
+
+    // DiscordSRV log monitoring for server start/stop
+    if (message.channel.id === CONSOLE_CHANNEL_ID && SEND_SERVER_LOGS_TO_DM) {
+        const content = message.content.toLowerCase();
+        const owner = await client.users.fetch(OWNER_ID);
+
+        if (content.includes('server started') || content.includes('done')) {
+            await owner.send('✅ Minecraft server has started!');
+        }
+
+        if (content.includes('stopping server') || content.includes('server shutting down')) {
+            await owner.send('❌ Minecraft server is stopping!');
+        }
+    }
 
     if (message.content === '!ping') return message.reply('🏓 Pong!');
 
@@ -173,7 +188,7 @@ client.once('ready', async () => {
     try {
         if (OWNER_ID) {
             const owner = await client.users.fetch(OWNER_ID);
-            await owner.send('✅ Minecraft server has started and the bot is online!');
+            await owner.send('✅ The bot is online!');
             console.log("✅ DM sent to owner.");
         } else {
             console.warn("⚠️ OWNER_ID is not defined.");
