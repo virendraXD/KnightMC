@@ -4,6 +4,14 @@ const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
+const quizCooldown = new Set();
+const usedQuestionIndexes = new Set();
+
+const OWNER_ID = process.env.OWNER_ID;
+const PORT = process.env.PORT || 3000;
+const CHANNEL_ID = process.env.CHANNEL_ID;
+const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
+
 const app = express();
 const client = new Client({
     intents: [
@@ -12,19 +20,6 @@ const client = new Client({
         GatewayIntentBits.MessageContent
     ]
 });
-
-const quizCooldown = new Set();
-const usedQuestionIndexes = new Set();
-const OWNER_ID = process.env.OWNER_ID;
-const PORT = process.env.PORT || 3000;
-const CHANNEL_ID = process.env.CHANNEL_ID;
-
-if (!process.env.MONGO_URI) {
-    console.error("❌ MONGO_URI is undefined! Check your Replit secrets.");
-    process.exit(1);
-} else {
-    console.log('🔍 MONGO_URI loaded successfully.');
-}
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -45,20 +40,15 @@ const xpSchema = new mongoose.Schema({
 });
 const XP = mongoose.model('XP', xpSchema);
 
-const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
-
 app.use(express.json());
-
-app.get('/', (req, res) => {
-    res.send('KnightMC is alive sir!');
-});
+app.get('/', (req, res) => res.send('KnightMC is alive sir!'));
 
 app.post('/uptime-robot-webhook', async (req, res) => {
     const status = req.body.status;
     try {
         const channel = await client.channels.fetch(CHANNEL_ID);
         if (status === 0) await channel.send('🚨 Service is DOWN!');
-  else if (status === 1) await channel.send('✅ Service is UP!');
+        else if (status === 1) await channel.send('✅ Service is UP!');
         res.status(200).send('Received');
     } catch (error) {
         console.error('Error sending status:', error);
@@ -180,13 +170,16 @@ app.listen(PORT, () => {
 
 client.once('ready', async () => {
     console.log(`🤖 Logged in as ${client.user.tag}`);
-
     try {
-        const owner = await client.users.fetch(OWNER_ID);
-        await owner.send('✅ Your bot has started and is online!');
-        console.log(`✅ Sent startup DM to owner (${owner.tag})`);
-    } catch (error) {
-        console.error('❌ Failed to send DM to owner:', error);
+        if (OWNER_ID) {
+            const owner = await client.users.fetch(OWNER_ID);
+            await owner.send('✅ Minecraft server has started and the bot is online!');
+            console.log("✅ DM sent to owner.");
+        } else {
+            console.warn("⚠️ OWNER_ID is not defined.");
+        }
+    } catch (err) {
+        console.error("❌ Failed to send DM to owner:", err);
     }
 });
 
