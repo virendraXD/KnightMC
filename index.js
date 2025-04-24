@@ -64,67 +64,33 @@ function getLevel(xp) {
 
 // Make sure you're using this inside an async function or event listener
 client.on('messageCreate', async (message) => {
-    if (message.author.bot) return;
+    if (message.author.bot) return;  // Ignore bot messages
 
+    // Make sure the message is coming from the correct console channel
     if (message.channel.id === CONSOLE_CHANNEL_ID) {
+        // Normalize message content for easy checking
         const rawContent = message.content
-            .replace(/```diff/g, '')
-            .replace(/```/g, '')
-            .trim()
-            .replace(/\s+/g, ' ') // Normalize spaces
-            .toLowerCase();       // Normalize case
-    
-        console.log("Processed Console Message:", rawContent); // Debug
-    
-        // Regex matches lowercase version of the message
-        const essentialsHookRegex = /^\[\w{3} \d{2}:\d{2}:\d{2} info discordsrv\] enabling essentials hook/;    
-        const clearedSlashRegex = /\[.* info discordsrv\] cleared all pre-existing slash commands in \d+\/\d+ guilds \(\d+ cancelled\)/;
-        const keyword = 'essentials';
-        const wordRegex = new RegExp(`\\b${keyword}\\b`, 'i'); // \b = word boundary
+            .replace(/```diff/g, '')  // Remove code block markers
+            .replace(/```/g, '')      // Remove any other code block markers
+            .replace(/\s+/g, ' ')     // Replace multiple spaces with one
+            .trim()                   // Remove leading/trailing spaces
+            .toLowerCase();           // Make everything lowercase for easier matching
 
-        if (wordRegex.test(rawContent)) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send(`📌 Exact word \`${keyword}\` found in the console.`);
-        }
+        // Debug output to see what we got
+        console.log("Processed Console Message:", rawContent);
 
-        if (essentialsHookRegex.test(rawContent)) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send('⚙️ DiscordSRV hooked into Essentials!');
-        }
-
-        if (clearedSlashRegex.test(rawContent)) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send('💠 DiscordSRV slash commands cleared!');
-        }
-
+        // Check if the content includes 'essentials'
         if (rawContent.includes('essentials')) {
+            console.log("Found the word 'essentials' in the message!");
+
             try {
+                // Fetch the owner and send them a message
                 const owner = await client.users.fetch(process.env.OWNER_ID);
                 await owner.send('📌 Found the word `essentials` in the console!');
-                console.log("DM Sent to Owner!"); // Debugging DM
+                console.log("DM Sent to Owner!");
             } catch (err) {
                 console.error("Error sending DM:", err);
             }
-        }
-
-        const keywords = ['essentials', 'vault', 'discordsrv', 'error'];
-        for (const word of keywords) {
-            if (rawContent.includes(word)) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send(`📌 Detected keyword: \`${word}\``);
-            break;
-            }
-        }
-
-
-        if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send('✅ Minecraft server has fully started!');
-        }
-    
-        if (rawContent.includes('stopping server') || rawContent.includes('server shutting down')) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send('❌ Minecraft server is stopping!');
         }
     }
     
