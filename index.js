@@ -74,7 +74,7 @@ client.on('messageCreate', async (message) => {
             .replace(/\s+/g, ' ') // Normalize spaces
             .toLowerCase();       // Normalize case
     
-        console.log("Normalized Console Message:", rawContent);
+        console.log("Processed Console Message:", rawContent); // Debug
     
         // Regex matches lowercase version of the message
         const essentialsHookRegex = /^\[\w{3} \d{2}:\d{2}:\d{2} info discordsrv\] enabling essentials hook/;    
@@ -98,8 +98,13 @@ client.on('messageCreate', async (message) => {
         }
 
         if (rawContent.includes('essentials')) {
-            const owner = await client.users.fetch(process.env.OWNER_ID);
-            await owner.send('🔍 Found the word `essentials` in the console!');
+            try {
+                const owner = await client.users.fetch(process.env.OWNER_ID);
+                await owner.send('📌 Found the word `essentials` in the console!');
+                console.log("DM Sent to Owner!"); // Debugging DM
+            } catch (err) {
+                console.error("Error sending DM:", err);
+            }
         }
 
         const keywords = ['essentials', 'vault', 'discordsrv', 'error'];
