@@ -94,8 +94,6 @@ client.on('messageCreate', async (message) => {
             console.error("Failed to send DM to owner:", err);
         }
     }
-});
-
 
     
     if (message.content === '!ping') return message.reply('🏓 Pong!');
@@ -197,6 +195,7 @@ client.on('messageCreate', async (message) => {
     }
 
     await user.save();
+});
 
 app.listen(PORT, () => {
     console.log(`🚀 Web server running on port ${PORT}`);
