@@ -67,34 +67,34 @@ client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
     if (message.channel.id === CONSOLE_CHANNEL_ID) {
-        // Remove ``` and trim the message
         const rawContent = message.content
-        .replace(/```diff/g, '') // Remove ```diff
-        .replace(/```/g, '')     // Remove any other ```
-        .trim()
-        .toLowerCase();
+            .replace(/```diff/g, '')
+            .replace(/```/g, '')
+            .trim()
+            .replace(/\s+/g, ' ') // Normalize spaces
+            .toLowerCase();       // Normalize case
     
-        console.log("Stripped Console Message:", rawContent); // Debug output
-
-        try {
-            // Check for "server started" keywords
-            if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
-                const owner = await client.users.fetch(process.env.OWNER_ID);
-                await owner.send('✅ Minecraft server has fully started!');
-                console.log("Sent server started DM to owner.");
-            }
-
-            // Check for "server stopping" keywords
-            if (rawContent.includes('stopping server') || rawContent.includes('server shutting down')) {
-                const owner = await client.users.fetch(process.env.OWNER_ID);
-                await owner.send('❌ Minecraft server is stopping!');
-                console.log("Sent server stopping DM to owner.");
-            }
-        } catch (err) {
-            console.error("Failed to send DM to owner:", err);
+        console.log("Normalized Console Message:", rawContent);
+    
+        // Regex matches lowercase version of the message
+        const essentialsHookRegex = /\[\w{3} \d{2}:\d{2}:\d{2} info discordsrv\] enabling essentials hook/;
+    
+        if (essentialsHookRegex.test(rawContent)) {
+            const owner = await client.users.fetch(process.env.OWNER_ID);
+            await owner.send('⚙️ DiscordSRV hooked into Essentials!');
+        }
+    
+        if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
+            const owner = await client.users.fetch(process.env.OWNER_ID);
+            await owner.send('✅ Minecraft server has fully started!');
+        }
+    
+        if (rawContent.includes('stopping server') || rawContent.includes('server shutting down')) {
+            const owner = await client.users.fetch(process.env.OWNER_ID);
+            await owner.send('❌ Minecraft server is stopping!');
         }
     }
-
+    
     
     if (message.content === '!ping') return message.reply('🏓 Pong!');
 
