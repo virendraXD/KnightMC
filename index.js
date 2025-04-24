@@ -77,8 +77,7 @@ client.on('messageCreate', async (message) => {
         console.log("Normalized Console Message:", rawContent);
     
         // Regex matches lowercase version of the message
-        const essentialsHookRegex = /\[\w{3} \d{2}:\d{2}:\d{2} info discordsrv\] enabling essentials hook/;
-    
+        const essentialsHookRegex = /^\[\w{3} \d{2}:\d{2}:\d{2} info discordsrv\] enabling essentials hook/;    
         if (essentialsHookRegex.test(rawContent)) {
             const owner = await client.users.fetch(process.env.OWNER_ID);
             await owner.send('⚙️ DiscordSRV hooked into Essentials!');
