@@ -78,9 +78,16 @@ client.on('messageCreate', async (message) => {
     
         // Regex matches lowercase version of the message
         const essentialsHookRegex = /^\[\w{3} \d{2}:\d{2}:\d{2} info discordsrv\] enabling essentials hook/;    
+        const clearedSlashRegex = /\[.* info discordsrv\] cleared all pre-existing slash commands in \d+\/\d+ guilds \(\d+ cancelled\)/;
+
         if (essentialsHookRegex.test(rawContent)) {
             const owner = await client.users.fetch(process.env.OWNER_ID);
             await owner.send('⚙️ DiscordSRV hooked into Essentials!');
+        }
+
+        if (clearedSlashRegex.test(rawContent)) {
+            const owner = await client.users.fetch(process.env.OWNER_ID);
+            await owner.send('💠 DiscordSRV slash commands cleared!');
         }
     
         if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
