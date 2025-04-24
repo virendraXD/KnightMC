@@ -19,7 +19,8 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
-    ]
+    ],
+    partials: [Partials.Channel] // Needed for DMs
 });
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -61,25 +62,40 @@ function getLevel(xp) {
     return Math.floor(Math.sqrt(xp) / 10);
 }
 
+// Make sure you're using this inside an async function or event listener
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-if (message.channel.id === CONSOLE_CHANNEL_ID) {
-    // Strip triple backticks and whitespace
-    const rawContent = message.content.replace(/```/g, '').trim().toLowerCase();
+    if (message.channel.id === CONSOLE_CHANNEL_ID) {
+        // Remove ``` and trim the message
+        const rawContent = message.content
+        .replace(/```diff/g, '') // Remove ```diff
+        .replace(/```/g, '')     // Remove any other ```
+        .trim()
+        .toLowerCase();
+    
+        console.log("Stripped Console Message:", rawContent); // Debug output
 
-    console.log("Stripped Console Message:", rawContent); // Optional debug
+        try {
+            // Check for "server started" keywords
+            if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
+                const owner = await client.users.fetch(process.env.OWNER_ID);
+                await owner.send('✅ Minecraft server has fully started!');
+                console.log("Sent server started DM to owner.");
+            }
 
-    if (rawContent.includes('done (') && rawContent.includes('for help, type "help"')) {
-        const owner = await client.users.fetch(OWNER_ID);
-        await owner.send('✅ Minecraft server has fully started!');
+            // Check for "server stopping" keywords
+            if (rawContent.includes('stopping server') || rawContent.includes('server shutting down')) {
+                const owner = await client.users.fetch(process.env.OWNER_ID);
+                await owner.send('❌ Minecraft server is stopping!');
+                console.log("Sent server stopping DM to owner.");
+            }
+        } catch (err) {
+            console.error("Failed to send DM to owner:", err);
+        }
     }
+});
 
-    if (rawContent.includes('stopping server') || rawContent.includes('server shutting down')) {
-        const owner = await client.users.fetch(OWNER_ID);
-        await owner.send('❌ Minecraft server is stopping!');
-    }
-}
 
     
     if (message.content === '!ping') return message.reply('🏓 Pong!');
