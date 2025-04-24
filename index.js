@@ -197,7 +197,6 @@ client.on('messageCreate', async (message) => {
     }
 
     await user.save();
-});
 
 app.listen(PORT, () => {
     console.log(`🚀 Web server running on port ${PORT}`);
