@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, Partials } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
