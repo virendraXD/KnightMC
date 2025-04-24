@@ -64,7 +64,8 @@ function getLevel(xp) {
 
 // Make sure you're using this inside an async function or event listener
 client.on('messageCreate', async (message) => {
-    if (message.author.bot) return;  // Ignore bot messages
+    // Don't process messages from the bot unless it’s the console channel
+    if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
 
     // Log every incoming message for debugging
     console.log("Incoming Message:", message.content);
@@ -86,19 +87,19 @@ client.on('messageCreate', async (message) => {
 
         // Check if the content includes 'essentials'
         if (rawContent.includes('essentials')) {
-            console.log("YOFound the word 'essentials' in the message!");
+            console.log("Found the word 'essentials' in the message!");
 
             try {
                 // Fetch the owner and send them a message
                 const owner = await client.users.fetch(process.env.OWNER_ID);
-                await owner.send('📌YO Found the word `essentials` in the console!');
-                console.log("YO DM Sent to Owner!");
+                await owner.send('📌 Found the word `essentials` in the console!');
+                console.log("DM Sent to Owner!");
             } catch (err) {
-                console.error("YO Error sending DM:", err);
+                console.error("Error sending DM:", err);
             }
         }
     }
- 
+
     
     if (message.content === '!ping') return message.reply('🏓 Pong!');
 
