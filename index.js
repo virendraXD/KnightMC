@@ -42,6 +42,24 @@ const xpSchema = new mongoose.Schema({
 });
 const XP = mongoose.model('XP', xpSchema);
 
+// On message
+client.on('messageCreate', async message => {
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
+  
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const cmdName = args.shift().toLowerCase();
+  
+    const command = client.commands.get(cmdName);
+    if (!command) return;
+  
+    try {
+      await command.execute(message, args);
+    } catch (err) {
+      console.error(err);
+      message.reply('Something went wrong executing that command.');
+    }
+  });
+
 app.use(express.json());
 app.get('/', (req, res) => res.send('KnightMC is alive!'));
 
