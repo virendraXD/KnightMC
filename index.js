@@ -3,6 +3,9 @@ const express = require('express');
 const { Client, GatewayIntentBits, EmbedBuilder, Partials } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
+const config = require('./config.json');
+const prefix = config.prefix;
+
 
 const quizCooldown = new Set();
 const usedQuestionIndexes = new Set();
@@ -100,18 +103,27 @@ client.on('messageCreate', async (message) => {
         }
     }
 
+    // If the message doesn't start with prefix or is from a bot, ignore it
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-    
-    if (message.content === '!ping') return message.reply('🏓 Pong!');
-    if (command === 'ping') return message.reply('🏓 Pong!');
 
-    if (message.content === '!rank') {
+    // Commands Handling
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
+
+    // Ping Command
+    if (command === 'ping') {
+        return message.reply('🏓 Pong!');
+    }
+
+    // Rank Command
+    if (command === 'rank') {
         const user = await XP.findOne({ userId: message.author.id });
         if (!user) return message.reply("You don't have any XP yet.");
         return message.reply(`**${message.author.username}** | Level: \`${user.level}\` | XP: \`${user.xp}\``);
     }
 
-    if (message.content === '!top') {
+    // Top Command
+    if (command === 'top') {
         const leaderboard = await XP.find().sort({ xp: -1 }).limit(5);
         const formatted = await Promise.all(leaderboard.map(async (user, i) => {
             try {
@@ -124,7 +136,8 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`**🏆 XP Leaderboard**\n${formatted.join('\n')}`);
     }
 
-    if (message.content === '!quiz') {
+    // Quiz Command
+    if (command === 'quiz') {
         if (quizCooldown.has(message.author.id)) {
             return message.reply("⏳ Please wait before starting another quiz!");
         }
@@ -158,7 +171,7 @@ client.on('messageCreate', async (message) => {
         const filter = m => m.author.id === message.author.id;
         const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
 
-        collector.on('collect', async collected => {
+        collector.on('collect', async (collected) => {
             const userAnswer = parseInt(collected.content);
             if (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 4) {
                 return message.channel.send("❌ Invalid answer. Please enter a number between 1 and 4.");
@@ -189,6 +202,7 @@ client.on('messageCreate', async (message) => {
         return;
     }
 
+    // Default XP Handling (Every message that isn't a command will give XP)
     let user = await XP.findOne({ userId: message.author.id });
     if (!user) user = new XP({ userId: message.author.id });
 
@@ -203,6 +217,7 @@ client.on('messageCreate', async (message) => {
 
     await user.save();
 });
+
 
 app.listen(PORT, () => {
     console.log(`🚀 Web server running on port ${PORT}`);
