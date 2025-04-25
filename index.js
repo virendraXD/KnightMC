@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const CONSOLE_CHANNEL_ID = process.env.CONSOLE_CHANNEL_ID;
 const SEND_SERVER_LOGS_TO_DM = process.env.SEND_SERVER_LOGS_TO_DM === 'true';
 const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
-
+// message.content
 const app = express();
 const client = new Client({
     intents: [
@@ -100,8 +100,10 @@ client.on('messageCreate', async (message) => {
         }
     }
 
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
     
     if (message.content === '!ping') return message.reply('🏓 Pong!');
+    if (command === 'ping') return message.reply('🏓 Pong!');
 
     if (message.content === '!rank') {
         const user = await XP.findOne({ userId: message.author.id });
