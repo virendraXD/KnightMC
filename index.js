@@ -1,10 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const { Client, GatewayIntentBits, EmbedBuilder, Partials, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, Partials } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const prefix = '!';
 const quizCooldown = new Set();
 const usedQuestionIndexes = new Set();
 
@@ -21,7 +20,7 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
     ],
-    partials: [Partials.Channel]
+    partials: [Partials.Channel] // Needed for DMs
 });
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -43,46 +42,74 @@ const xpSchema = new mongoose.Schema({
 });
 const XP = mongoose.model('XP', xpSchema);
 
+app.use(express.json());
+app.get('/', (req, res) => res.send('KnightMC is alive!'));
+
+app.post('/uptime-robot-webhook', async (req, res) => {
+    const status = req.body.status;
+    try {
+        const channel = await client.channels.fetch(CONSOLE_CHANNEL_ID);
+        if (status === 0) await channel.send('🚨 Service is DOWN!');
+        else if (status === 1) await channel.send('✅ Service is UP!');
+        res.status(200).send('Received');
+    } catch (error) {
+        console.error('Error sending status:', error);
+        res.status(500).send('Error');
+    }
+});
+
 function getLevel(xp) {
     return Math.floor(Math.sqrt(xp) / 10);
 }
 
+// Make sure you're using this inside an async function or event listener
 client.on('messageCreate', async (message) => {
+    // Don't process messages from the bot unless it’s the console channel
     if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
 
-    // Console log feature
-    if (message.channel.id === CONSOLE_CHANNEL_ID) {
-        const rawContent = message.content
-            .replace(/```diff/g, '')
-            .replace(/```/g, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-            .toLowerCase();
+    // Log every incoming message for debugging
+    console.log("Incoming Message:", message.content);
 
+    // Make sure the message is coming from the correct console channel
+    if (message.channel.id === CONSOLE_CHANNEL_ID) {
+        console.log("Message is from the console channel");
+
+        // Normalize message content for easy checking
+        const rawContent = message.content
+            .replace(/```diff/g, '')  // Remove code block markers
+            .replace(/```/g, '')      // Remove any other code block markers
+            .replace(/\s+/g, ' ')     // Replace multiple spaces with one
+            .trim()                   // Remove leading/trailing spaces
+            .toLowerCase();           // Make everything lowercase for easier matching
+
+        // Debug output to see what we got
+        console.log("Processed Console Message:", rawContent);
+
+        // Check if the content includes 'essentials'
         if (rawContent.includes('essentials')) {
+            console.log("Found the word 'essentials' in the message!");
+
             try {
-                const owner = await client.users.fetch(OWNER_ID);
+                // Fetch the owner and send them a message
+                const owner = await client.users.fetch(process.env.OWNER_ID);
                 await owner.send('📌 Found the word `essentials` in the console!');
+                console.log("DM Sent to Owner!");
             } catch (err) {
                 console.error("Error sending DM:", err);
             }
         }
     }
 
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    
+    if (message.content === '!ping') return message.reply('🏓 Pong!');
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if (command === 'ping') return message.reply('🏓 Pong!');
-
-    if (command === 'rank') {
+    if (message.content === '!rank') {
         const user = await XP.findOne({ userId: message.author.id });
         if (!user) return message.reply("You don't have any XP yet.");
         return message.reply(`**${message.author.username}** | Level: \`${user.level}\` | XP: \`${user.xp}\``);
     }
 
-    if (command === 'top') {
+    if (message.content === '!top') {
         const leaderboard = await XP.find().sort({ xp: -1 }).limit(5);
         const formatted = await Promise.all(leaderboard.map(async (user, i) => {
             try {
@@ -95,7 +122,7 @@ client.on('messageCreate', async (message) => {
         return message.channel.send(`**🏆 XP Leaderboard**\n${formatted.join('\n')}`);
     }
 
-    if (command === 'quiz') {
+    if (message.content === '!quiz') {
         if (quizCooldown.has(message.author.id)) {
             return message.reply("⏳ Please wait before starting another quiz!");
         }
@@ -156,6 +183,7 @@ client.on('messageCreate', async (message) => {
                 message.channel.send("⏰ Time's up! You didn't answer.");
             }
         });
+
         return;
     }
 
@@ -174,35 +202,23 @@ client.on('messageCreate', async (message) => {
     await user.save();
 });
 
-app.use(express.json());
-app.get('/', (req, res) => res.send('KnightMC is alive!'));
-
-app.post('/uptime-robot-webhook', async (req, res) => {
-    const status = req.body.status;
-    try {
-        const channel = await client.channels.fetch(CONSOLE_CHANNEL_ID);
-        if (status === 0) await channel.send('🚨 Service is DOWN!');
-        else if (status === 1) await channel.send('✅ Service is UP!');
-        res.status(200).send('Received');
-    } catch (error) {
-        console.error('Error sending status:', error);
-        res.status(500).send('Error');
-    }
-});
-
 app.listen(PORT, () => {
     console.log(`🚀 Web server running on port ${PORT}`);
 });
 
 client.once('ready', async () => {
     console.log(`🤖 Logged in as ${client.user.tag}`);
-    if (OWNER_ID && SEND_SERVER_LOGS_TO_DM) {
-        try {
+    try {
+        if (OWNER_ID) {
             const owner = await client.users.fetch(OWNER_ID);
             await owner.send('✅ The bot is online!');
-            console.log('✅ DM sent to owner.');
-        } catch (err) {
-            console.error('❌ Failed to send DM to owner:', err.code || err.message);
+            console.log("✅ DM sent to owner.");
+        } else {
+            console.warn("⚠️ OWNER_ID is not defined.");
         }
+    } catch (err) {
+        console.error("❌ Failed to send DM to owner:", err);
     }
 });
+
+client.login(process.env.DISCORD_TOKEN);
