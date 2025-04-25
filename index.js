@@ -1,11 +1,12 @@
 require('dotenv').config();
 const express = require('express');
-const { Client, GatewayIntentBits, EmbedBuilder, Partials } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, Partials, Collection } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const config = require('./config.json');
+const path = require('path');
 const prefix = config.prefix;
-
+// const client
 
 const quizCooldown = new Set();
 const usedQuestionIndexes = new Set();
@@ -15,8 +16,7 @@ const PORT = process.env.PORT || 3000;
 const CONSOLE_CHANNEL_ID = process.env.CONSOLE_CHANNEL_ID;
 const SEND_SERVER_LOGS_TO_DM = process.env.SEND_SERVER_LOGS_TO_DM === 'true';
 const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
-// message.content
-const app = express();
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -25,6 +25,24 @@ const client = new Client({
     ],
     partials: [Partials.Channel] // Needed for DMs
 });
+
+client.commands = new Collection();
+
+// Load commands from subfolders
+const commandsPath = path.join(__dirname, 'commands');
+fs.readdirSync(commandsPath).forEach(folder => {
+  const folderPath = path.join(commandsPath, folder);
+  fs.readdirSync(folderPath).filter(file => file.endsWith('.js')).forEach(file => {
+    const command = require(path.join(folderPath, file));
+    client.commands.set(command.name, command);
+  });
+});
+
+
+
+// message.content
+const app = express();
+
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -108,7 +126,18 @@ client.on('messageCreate', async (message) => {
 
     // Commands Handling
     const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
+
+    const command = client.commands.get(commandName);
+    if (!command) return;
+
+    try {
+        await command.execute(message, args);
+      } catch (error) {
+        console.error(`Error in command ${commandName}:`, error);
+        message.reply("⚠️ There was an error trying to execute that command.");
+      }
+
 
     // Ping Command
     if (command === 'ping') {
