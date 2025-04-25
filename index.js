@@ -6,7 +6,7 @@ const fs = require('fs');
 const config = require('./config.json');
 const path = require('path');
 const prefix = config.prefix;
-// const client
+// commands
 
 const quizCooldown = new Set();
 const usedQuestionIndexes = new Set();
@@ -28,16 +28,13 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Load commands from subfolders
-const commandsPath = path.join(__dirname, 'commands');
-fs.readdirSync(commandsPath).forEach(folder => {
-  const folderPath = path.join(commandsPath, folder);
-  fs.readdirSync(folderPath).filter(file => file.endsWith('.js')).forEach(file => {
-    const command = require(path.join(folderPath, file));
-    client.commands.set(command.name, command);
-  });
-});
+// Load commands dynamically
+const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
 
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+  client.commands.set(command.name, command);
+}
 
 
 // message.content
@@ -59,8 +56,12 @@ const xpSchema = new mongoose.Schema({
     xp: { type: Number, default: 0 },
     level: { type: Number, default: 0 },
     streak: { type: Number, default: 0 },
-    lastDaily: { type: Date }
-});
+    lastDaily: { type: Date, default: null },
+    coins: { type: Number, default: 0 }
+}, { timestamps: true });
+
+module.exports = mongoose.model('XP', xpSchema);
+
 const XP = mongoose.model('XP', xpSchema);
 
 app.use(express.json());

@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
     emerald: { type: Number, default: 0 }
   },
   pickaxeLevel: { type: Number, default: 1 },
-  lastMine: { type: Date, default: null }
+  hasLuckyCharm: { type: Boolean, default: false },
+  boostExpires: { type: Date, default: null },
+  lastMine: { type: Date, default: null },
 });
 
 module.exports = mongoose.model('User', userSchema);
