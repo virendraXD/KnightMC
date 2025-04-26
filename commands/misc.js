@@ -1,7 +1,6 @@
-const XP = require('../models/XP');
+const XP = require('../models/xp');
 const quizQuestions = require('../questions.json');
 const { EmbedBuilder } = require('discord.js');
-
 const usedQuestionIndexes = new Set();
 const quizCooldown = new Set();
 

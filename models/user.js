@@ -17,14 +17,8 @@ const userSchema = new mongoose.Schema({
   dailyStrike: { type: Number, default: 0 },
   lastDaily: { type: Date, default: null },
   minecoins: { type: Number, default: 0 }, // 💰 New currency field
-  pets: {
-    type: Array,
-    default: [], // Start with no pets, but can hold multiple
-  },
-  petSlots: {
-    type: Number,
-    default: 2, // Starter users get 2 pet slots
-  } 
+  pets: { type: Array, default: [], },// Start with no pets, but can hold multiple
+  petSlots: { type: Number, default: 2, } // Starter users get 2 pet slots
 });
 
 module.exports = mongoose.model('User', userSchema);
