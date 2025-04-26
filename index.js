@@ -175,30 +175,36 @@ client.on('messageCreate', async (message) => {
     }
     
     // Don't respond to bot messages (except console channel case you already handle above)
-if (message.author.bot) return;
-
-// Help Command
-if (message.content === '!help') {
-    return message.channel.send(`
-**KnightMC Bot Commands:**
-\`!help\` — Show this help menu.
-\`!info\` — Show bot info.
-\`!ping\` — Check bot latency.
-\`!rank\` — See your XP and level.
-\`!top\` — View the top XP leaderboard.
-\`!quiz\` — Play a Minecraft quiz to earn XP.
-    `);
-}
-
-// Info Command
-if (message.content === '!info') {
-    return message.channel.send(`
-**KnightMC Bot Info:**
-- Developed by KnightGost
-- Version: 1.0.0
-- Features: Minecraft Quiz, XP System, Server Console Monitoring
-    `);
-}
+    if (message.author.bot) return;
+    
+    // Help Command
+    if (message.content === '!help') {
+        return message.channel.send(`
+    **KnightMC Bot Commands:**
+    \`!help\` — Show this help menu.
+    \`!info\` — Show bot info.
+    \`!ping\` — Check bot latency.
+    \`!rank\` — See your XP and level.
+    \`!quiz\` — Play a Minecraft quiz to earn XP.
+    \`!mine\` — Mine for resources and earn XP.
+    \`!inventory\` — Check your inventory.
+    \`!shop\` — View available upgrades.
+    \`!buy\` - Buy an upgrade.
+    \`!sell\` — Sell your resources for coins.
+    \`!dailychest\` — Claim your daily reward.
+    \`!minecoin\` — Check your coin balance.
+        `);
+    }
+    
+    // Info Command
+    if (message.content === '!info') {
+        return message.channel.send(`
+    **KnightMC Bot Info:**
+    - Developed by KnightGost
+    - Version: 1.0.0
+    - Features: Minecraft Quiz, XP System, Server Console Monitoring
+        `);
+    }
 
 });
 

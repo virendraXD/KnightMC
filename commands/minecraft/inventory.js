@@ -1,4 +1,5 @@
-const { emojisToUpload } = require('../../index'); // Adjust the path if needed
+const { EmbedBuilder } = require('discord.js');
+const { emojisToUpload } = require('../../index');
 const User = require('../../models/user');
 
 module.exports = {
@@ -15,23 +16,28 @@ module.exports = {
 
       const inv = user.inventory || {};
 
-      // Find the image URLs from emojisToUpload
+      // Find the image URLs
       const cobblestoneImage = emojisToUpload.find(emoji => emoji.name === 'cobblestone')?.url || 'https://via.placeholder.com/50';
       const coalImage = emojisToUpload.find(emoji => emoji.name === 'coal')?.url || 'https://via.placeholder.com/50';
       const ironImage = emojisToUpload.find(emoji => emoji.name === 'iron')?.url || 'https://via.placeholder.com/50';
       const diamondImage = emojisToUpload.find(emoji => emoji.name === 'diamond')?.url || 'https://via.placeholder.com/50';
       const emeraldImage = emojisToUpload.find(emoji => emoji.name === 'emerald')?.url || 'https://via.placeholder.com/50';
 
-      // Build the inventory message using image URLs
-      const inventoryMessage = 
-        `**🧰 Your Inventory:**\n` +
-        `${inv.cobblestone > 0 ? `![cobble](${cobblestoneImage})` : ''} ${inv.cobblestone || 0}\n` +
-        `${inv.coal > 0 ? `![coal](${coalImage})` : ''} ${inv.coal || 0}\n` +
-        `${inv.iron > 0 ? `![iron](${ironImage})` : ''} ${inv.iron || 0}\n` +
-        `${inv.diamond > 0 ? `![diamond](${diamondImage})` : ''} ${inv.diamond || 0}\n` +
-        `${inv.emerald > 0 ? `![emerald](${emeraldImage})` : ''} ${inv.emerald || 0}`;
+      // Build the embed with inline fields showing emojis and image counts
+      const embed = new EmbedBuilder()
+        .setTitle(`${message.author.username}'s Inventory`)
+        .setColor('#FE7743')
+        .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
+        .addFields(
+          { name: `Coal`, value: `${inv.coal || 0}`, inline: true },
+          { name: `Cobblestone`, value: `${inv.cobblestone || 0}`, inline: true },
+          { name: `Diamond`, value: `${inv.diamond || 0}`, inline: true },
+          { name: `Iron`, value: `${inv.iron || 0}`, inline: true },
+          { name: `Emerald`, value: `${inv.emerald || 0}`, inline: true }
+        )
 
-      return message.reply({ content: inventoryMessage });
+
+      return message.reply({ embeds: [embed] });
 
     } catch (err) {
       console.error("Inventory command error:", err);
