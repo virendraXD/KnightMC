@@ -26,16 +26,17 @@ const client = new Client({
     partials: [Partials.Channel] // Needed for DMs
 });
 
+// Assuming you have a 'commands' directory where all your commands are stored
+client.commands = new Map();
 client.commands = new Collection();
 
-// Load commands dynamically
-const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  client.commands.set(command.name, command);
-}
-
+// Reading all command files and adding them to the client.commands map
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+commandFiles.forEach(file => {
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.data.name, command);
+    console.log(`Command Loaded: ${command.data.name}`); // Debugging line to ensure commands are loaded
+});
 
 // message.content
 const app = express();
@@ -57,7 +58,6 @@ const xpSchema = new mongoose.Schema({
     level: { type: Number, default: 0 },
     streak: { type: Number, default: 0 },
     lastDaily: { type: Date, default: null },
-    coins: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = mongoose.model('XP', xpSchema);
@@ -122,38 +122,50 @@ client.on('messageCreate', async (message) => {
         }
     }
 
+    // -----------------------------------------------------------------------------
+
     // If the message doesn't start with prefix or is from a bot, ignore it
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    // Commands Handling
+    // Split the message into command and arguments
     const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const commandName = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase(); // Initialize commandName    
 
-    const command = client.commands.get(commandName);
-    if (!command) return;
+    console.log("Received Command:", commandName);  // Debugging line to track command name
 
+    // Find the command from client.commands
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+    if (!command) {
+        console.log(`No command found for: ${commandName}`); // Debugging statement
+        return;
+    }
+
+    // Execute the command
     try {
+        console.log(`Executing command: ${commandName}`); // Debugging statement
         await command.execute(message, args);
-      } catch (error) {
+    } catch (error) {
         console.error(`Error in command ${commandName}:`, error);
         message.reply("⚠️ There was an error trying to execute that command.");
-      }
+    }
 
+    // Command specific actions:
 
     // Ping Command
-    if (command === 'ping') {
+    if (commandName === 'ping') {
         return message.reply('🏓 Pong!');
     }
 
     // Rank Command
-    if (command === 'rank') {
+    if (commandName === 'rank') {
         const user = await XP.findOne({ userId: message.author.id });
         if (!user) return message.reply("You don't have any XP yet.");
         return message.reply(`**${message.author.username}** | Level: \`${user.level}\` | XP: \`${user.xp}\``);
     }
 
     // Top Command
-    if (command === 'top') {
+    if (commandName === 'top') {
         const leaderboard = await XP.find().sort({ xp: -1 }).limit(5);
         const formatted = await Promise.all(leaderboard.map(async (user, i) => {
             try {
@@ -167,7 +179,7 @@ client.on('messageCreate', async (message) => {
     }
 
     // Quiz Command
-    if (command === 'quiz') {
+    if (commandName === 'quiz') {
         if (quizCooldown.has(message.author.id)) {
             return message.reply("⏳ Please wait before starting another quiz!");
         }
@@ -231,6 +243,8 @@ client.on('messageCreate', async (message) => {
 
         return;
     }
+
+
 
     // Default XP Handling (Every message that isn't a command will give XP)
     let user = await XP.findOne({ userId: message.author.id });

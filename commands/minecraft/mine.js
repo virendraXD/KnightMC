@@ -1,9 +1,12 @@
 const User = require('../../models/user'); // adjust the path if needed
 
 module.exports = {
-  name: 'mine',
+  data: {
+      name: 'mine',
+      description: 'Start mining',
+      aliases: ['m'],
 
-  async execute(message) {
+  async execute(message, args) {
     try {
       const userId = message.author.id;
       const cooldown = 30000;
@@ -70,4 +73,4 @@ module.exports = {
     return message.reply("⚠️ An error occurred while mining.");
     }
   }
-};
+}};
