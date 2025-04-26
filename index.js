@@ -1,21 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const { Client, GatewayIntentBits, EmbedBuilder, Partials, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
 const mongoose = require('mongoose');
 const fs = require('fs');
-const config = require('./config.json');
 const path = require('path');
-const prefix = config.prefix;
-// commands
-
-const quizCooldown = new Set();
-const usedQuestionIndexes = new Set();
-
-const OWNER_ID = process.env.OWNER_ID;
-const PORT = process.env.PORT || 3000;
-const CONSOLE_CHANNEL_ID = process.env.CONSOLE_CHANNEL_ID;
-const SEND_SERVER_LOGS_TO_DM = process.env.SEND_SERVER_LOGS_TO_DM === 'true';
-const quizQuestions = JSON.parse(fs.readFileSync('./questions.json', 'utf8'));
+const XP = require('./models/XP');
+const config = require('./config.json');
 
 const client = new Client({
     intents: [
@@ -23,25 +13,35 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent
     ],
-    partials: [Partials.Channel] // Needed for DMs
+    partials: [Partials.Channel]
 });
 
-// Assuming you have a 'commands' directory where all your commands are stored
-client.commands = new Map();
+const prefix = config.prefix;
+const OWNER_ID = process.env.OWNER_ID;
+const PORT = process.env.PORT || 3000;
+const CONSOLE_CHANNEL_ID = process.env.CONSOLE_CHANNEL_ID;
+const SEND_SERVER_LOGS_TO_DM = process.env.SEND_SERVER_LOGS_TO_DM === 'true';
+
 client.commands = new Collection();
 
-// Reading all command files and adding them to the client.commands map
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-commandFiles.forEach(file => {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.data.name, command);
-    console.log(`Command Loaded: ${command.data.name}`); // Debugging line to ensure commands are loaded
-});
+// Load commands
+const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const commands = require(`./commands/${file}`);
+    if (Array.isArray(commands)) {
+        for (const command of commands) {
+            if (command.name && command.execute) {
+                client.commands.set(command.name, command);
+                console.log(`✅ Loaded command: ${command.name}`);
+            }
+        }
+    } else if (commands.name && commands.execute) {
+        client.commands.set(commands.name, commands);
+        console.log(`✅ Loaded command: ${commands.name}`);
+    }
+}
 
-// message.content
-const app = express();
-
-
+// MongoDB setup
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -52,19 +52,14 @@ mongoose.connect(process.env.MONGO_URI, {
     process.exit(1);
 });
 
-const xpSchema = new mongoose.Schema({
-    userId: { type: String, required: true, unique: true },
-    xp: { type: Number, default: 0 },
-    level: { type: Number, default: 0 },
-    streak: { type: Number, default: 0 },
-    lastDaily: { type: Date, default: null },
-}, { timestamps: true });
+function getLevel(xp) {
+    return Math.floor(Math.sqrt(xp) / 10);
+}
 
-module.exports = mongoose.model('XP', xpSchema);
-
-const XP = mongoose.model('XP', xpSchema);
-
+// Express server
+const app = express();
 app.use(express.json());
+
 app.get('/', (req, res) => res.send('KnightMC is alive!'));
 
 app.post('/uptime-robot-webhook', async (req, res) => {
@@ -80,193 +75,11 @@ app.post('/uptime-robot-webhook', async (req, res) => {
     }
 });
 
-function getLevel(xp) {
-    return Math.floor(Math.sqrt(xp) / 10);
-}
-
-// Make sure you're using this inside an async function or event listener
-client.on('messageCreate', async (message) => {
-    // Don't process messages from the bot unless it’s the console channel
-    if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
-
-    // Log every incoming message for debugging
-    console.log("Incoming Message:", message.content);
-
-    // Make sure the message is coming from the correct console channel
-    if (message.channel.id === CONSOLE_CHANNEL_ID) {
-        console.log("Message is from the console channel");
-
-        // Normalize message content for easy checking
-        const rawContent = message.content
-            .replace(/```diff/g, '')  // Remove code block markers
-            .replace(/```/g, '')      // Remove any other code block markers
-            .replace(/\s+/g, ' ')     // Replace multiple spaces with one
-            .trim()                   // Remove leading/trailing spaces
-            .toLowerCase();           // Make everything lowercase for easier matching
-
-        // Debug output to see what we got
-        console.log("Processed Console Message:", rawContent);
-
-        // Check if the content includes 'essentials'
-        if (rawContent.includes('essentials')) {
-            console.log("Found the word 'essentials' in the message!");
-
-            try {
-                // Fetch the owner and send them a message
-                const owner = await client.users.fetch(process.env.OWNER_ID);
-                await owner.send('📌 Found the word `essentials` in the console!');
-                console.log("DM Sent to Owner!");
-            } catch (err) {
-                console.error("Error sending DM:", err);
-            }
-        }
-    }
-
-    // -----------------------------------------------------------------------------
-
-    // If the message doesn't start with prefix or is from a bot, ignore it
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-    // Split the message into command and arguments
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const commandName = args.shift().toLowerCase(); // Initialize commandName    
-
-    console.log("Received Command:", commandName);  // Debugging line to track command name
-
-    // Find the command from client.commands
-    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-
-    if (!command) {
-        console.log(`No command found for: ${commandName}`); // Debugging statement
-        return;
-    }
-
-    // Execute the command
-    try {
-        console.log(`Executing command: ${commandName}`); // Debugging statement
-        await command.execute(message, args);
-    } catch (error) {
-        console.error(`Error in command ${commandName}:`, error);
-        message.reply("⚠️ There was an error trying to execute that command.");
-    }
-
-    // Command specific actions:
-
-    // Ping Command
-    if (commandName === 'ping') {
-        return message.reply('🏓 Pong!');
-    }
-
-    // Rank Command
-    if (commandName === 'rank') {
-        const user = await XP.findOne({ userId: message.author.id });
-        if (!user) return message.reply("You don't have any XP yet.");
-        return message.reply(`**${message.author.username}** | Level: \`${user.level}\` | XP: \`${user.xp}\``);
-    }
-
-    // Top Command
-    if (commandName === 'top') {
-        const leaderboard = await XP.find().sort({ xp: -1 }).limit(5);
-        const formatted = await Promise.all(leaderboard.map(async (user, i) => {
-            try {
-                const member = await message.guild.members.fetch(user.userId);
-                return `#${i + 1} — **${member.user.username}** | Level: ${user.level}, XP: ${user.xp}`;
-            } catch {
-                return `#${i + 1} — Unknown User | Level: ${user.level}, XP: ${user.xp}`;
-            }
-        }));
-        return message.channel.send(`**🏆 XP Leaderboard**\n${formatted.join('\n')}`);
-    }
-
-    // Quiz Command
-    if (commandName === 'quiz') {
-        if (quizCooldown.has(message.author.id)) {
-            return message.reply("⏳ Please wait before starting another quiz!");
-        }
-        quizCooldown.add(message.author.id);
-        setTimeout(() => quizCooldown.delete(message.author.id), 5000);
-
-        if (usedQuestionIndexes.size === quizQuestions.length) {
-            usedQuestionIndexes.clear();
-        }
-
-        let index;
-        do {
-            index = Math.floor(Math.random() * quizQuestions.length);
-        } while (usedQuestionIndexes.has(index));
-
-        usedQuestionIndexes.add(index);
-        const quiz = quizQuestions[index];
-        const optionsText = quiz.options.map((opt, i) => `**${i + 1}.** ${opt}`).join('\n');
-
-        const embed = new EmbedBuilder()
-            .setColor('#00ff00')
-            .setAuthor({
-                name: 'Minecraft Quiz Challenge',
-                iconURL: 'https://cdn.discordapp.com/emojis/1364220323221737606.png'
-            })
-            .setDescription(`**${quiz.question}**\n\n${optionsText}\n\n_Reply with the option number (1–4)_`)
-            .setFooter({ text: `You have 15 seconds to answer!` });
-
-        await message.channel.send({ embeds: [embed] });
-
-        const filter = m => m.author.id === message.author.id;
-        const collector = message.channel.createMessageCollector({ filter, time: 15000, max: 1 });
-
-        collector.on('collect', async (collected) => {
-            const userAnswer = parseInt(collected.content);
-            if (isNaN(userAnswer) || userAnswer < 1 || userAnswer > 4) {
-                return message.channel.send("❌ Invalid answer. Please enter a number between 1 and 4.");
-            }
-
-            if (userAnswer - 1 === quiz.answer) {
-                await message.channel.send(`✅ Correct, ${message.author} you gained 100 XP.`);
-                let user = await XP.findOne({ userId: message.author.id });
-                if (!user) user = new XP({ userId: message.author.id });
-                user.xp += 100;
-                const newLevel = getLevel(user.xp);
-                if (newLevel > user.level) {
-                    user.level = newLevel;
-                    await message.channel.send(`🎉 GG ${message.author}, you leveled up to ${newLevel}!`);
-                }
-                await user.save();
-            } else {
-                await message.channel.send(`❌ Wrong! The correct answer was **${quiz.options[quiz.answer]}**.`);
-            }
-        });
-
-        collector.on('end', collected => {
-            if (collected.size === 0) {
-                message.channel.send("⏰ Time's up! You didn't answer.");
-            }
-        });
-
-        return;
-    }
-
-
-
-    // Default XP Handling (Every message that isn't a command will give XP)
-    let user = await XP.findOne({ userId: message.author.id });
-    if (!user) user = new XP({ userId: message.author.id });
-
-    const xpGain = Math.floor(Math.random() * 6) + 5;
-    user.xp += xpGain;
-    const newLevel = getLevel(user.xp);
-
-    if (newLevel > user.level) {
-        user.level = newLevel;
-        await message.channel.send(`🎉 GG ${message.author}, you leveled up to ${newLevel}!`);
-    }
-
-    await user.save();
-});
-
-
 app.listen(PORT, () => {
     console.log(`🚀 Web server running on port ${PORT}`);
 });
 
+// On bot ready
 client.once('ready', async () => {
     console.log(`🤖 Logged in as ${client.user.tag}`);
     try {
@@ -279,6 +92,60 @@ client.once('ready', async () => {
         }
     } catch (err) {
         console.error("❌ Failed to send DM to owner:", err);
+    }
+});
+
+// Message handler
+client.on('messageCreate', async (message) => {
+    if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
+
+    if (message.content.startsWith(prefix)) {
+        const args = message.content.slice(prefix.length).trim().split(/ +/);
+        const commandName = args.shift().toLowerCase();
+        const command = client.commands.get(commandName);
+
+        if (command) {
+            // Fetch user XP data from MongoDB
+            let userXp = await XP.findOne({ userId: message.author.id });
+
+            if (!userXp) {
+                userXp = new XP({
+                    userId: message.author.id,
+                    xp: 0,
+                    level: 0
+                });
+                await userXp.save();
+            }
+
+            try {
+                await command.execute(message, args, userXp);
+            } catch (error) {
+                console.error(`Error executing ${commandName}:`, error);
+                message.reply("⚠️ There was an error trying to execute that command.");
+            }
+        }
+    } else {
+        // XP gain system
+        let userXp = await XP.findOne({ userId: message.author.id });
+
+        if (!userXp) {
+            userXp = new XP({
+                userId: message.author.id,
+                xp: 0,
+                level: 0
+            });
+        }
+
+        const xpGain = Math.floor(Math.random() * 6) + 5;
+        userXp.xp += xpGain;
+
+        const newLevel = getLevel(userXp.xp);
+        if (newLevel > userXp.level) {
+            userXp.level = newLevel;
+            message.channel.send(`🎉 GG ${message.author}, you leveled up to ${newLevel}!`);
+        }
+
+        await userXp.save(); // Save the updated XP to MongoDB
     }
 });
 
