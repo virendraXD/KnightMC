@@ -7,4 +7,4 @@ const xpSchema = new mongoose.Schema({
 });
 
 // Fix OverwriteModelError
-module.exports = mongoose.models.XP || mongoose.model('XP', xpSchema);
+module.exports = mongoose.models.XP || mongoose.model('xp', xpSchema);
