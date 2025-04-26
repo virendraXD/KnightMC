@@ -1,4 +1,4 @@
-const XP = require('../models/xp');
+const XP = require('../models/XP');
 const quizQuestions = require('../questions.json');
 const { EmbedBuilder } = require('discord.js');
 
