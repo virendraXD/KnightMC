@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const XP = require('./models/xp');
+const XP = require('./models/XP');
 const config = require('./config.json');
 
 // Declare emojis globally
@@ -173,6 +173,33 @@ client.on('messageCreate', async (message) => {
 
         await userXp.save(); // Save the updated XP to MongoDB
     }
+    
+    // Don't respond to bot messages (except console channel case you already handle above)
+if (message.author.bot) return;
+
+// Help Command
+if (message.content === '!help') {
+    return message.channel.send(`
+**KnightMC Bot Commands:**
+\`!help\` — Show this help menu.
+\`!info\` — Show bot info.
+\`!ping\` — Check bot latency.
+\`!rank\` — See your XP and level.
+\`!top\` — View the top XP leaderboard.
+\`!quiz\` — Play a Minecraft quiz to earn XP.
+    `);
+}
+
+// Info Command
+if (message.content === '!info') {
+    return message.channel.send(`
+**KnightMC Bot Info:**
+- Developed by KnightGost
+- Version: 1.0.0
+- Features: Minecraft Quiz, XP System, Server Console Monitoring
+    `);
+}
+
 });
 
 client.on('guildCreate', async (guild) => {
