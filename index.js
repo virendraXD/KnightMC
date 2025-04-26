@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const XP = require('./models/XP');
+const XP = require('./models/xp');
 const config = require('./config.json');
 
 const client = new Client({
