@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   hasLuckyCharm: { type: Boolean, default: false },
   boostExpires: { type: Date, default: null },
   lastMine: { type: Date, default: null },
+  coins: { type: Number, default: 0 }, 
   minecoins: { type: Number, default: 0 } // 💰 New currency field
 });
 

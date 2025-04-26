@@ -24,23 +24,35 @@ const SEND_SERVER_LOGS_TO_DM = process.env.SEND_SERVER_LOGS_TO_DM === 'true';
 
 client.commands = new Collection();
 
-// Load commands
-const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
-for (const file of commandFiles) {
-    const commands = require(`./commands/${file}`);
-    if (Array.isArray(commands)) {
-        for (const command of commands) {
+// A function to recursively read all command files
+function loadCommands(dir, client) {
+    const files = fs.readdirSync(dir);
+  
+    for (const file of files) {
+      const fullPath = path.join(dir, file);
+  
+      if (fs.lstatSync(fullPath).isDirectory()) {
+        loadCommands(fullPath, client); // recursion for folders
+      } else if (file.endsWith('.js')) {
+        const commands = require(fullPath);
+        
+        if (Array.isArray(commands)) {
+          for (const command of commands) {
             if (command.name && command.execute) {
-                client.commands.set(command.name, command);
-                console.log(`✅ Loaded command: ${command.name}`);
+              client.commands.set(command.name, command);
+              console.log(`✅ Loaded command: ${command.name}`);
             }
+          }
+        } else if (commands.name && commands.execute) {
+          client.commands.set(commands.name, commands);
+          console.log(`✅ Loaded command: ${commands.name}`);
         }
-    } else if (commands.name && commands.execute) {
-        client.commands.set(commands.name, commands);
-        console.log(`✅ Loaded command: ${commands.name}`);
+      }
     }
-}
-
+  }
+  
+  // Usage
+  loadCommands(path.join(__dirname, 'commands'), client);
 // MongoDB setup
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -148,5 +160,42 @@ client.on('messageCreate', async (message) => {
         await userXp.save(); // Save the updated XP to MongoDB
     }
 });
+
+client.on('guildCreate', async (guild) => {
+    try {
+      console.log(`Joined new server: ${guild.name}`);
+  
+      // Array of emoji info
+      const emojisToUpload = [
+        { name: 'cobblestone', url: 'https://cdn.discordapp.com/emojis/1365620149079773215.png' },
+        { name: 'coal', url: 'https://cdn.discordapp.com/emojis/1365620139734728745.png' },
+        { name: 'iron', url: 'https://cdn.discordapp.com/emojis/1365620151722049567.png' },
+        { name: 'diamond', url: 'https://cdn.discordapp.com/emojis/1365620142574407780.png' },
+        { name: 'emerald', url: 'https://cdn.discordapp.com/emojis/1365620154628833300.png' },
+        { name: 'grass', url: 'https://cdn.discordapp.com/emojis/1364220323221737606.png' }
+      ];
+  
+      for (const emoji of emojisToUpload) {
+        // Check if emoji already exists
+        const existing = guild.emojis.cache.find(e => e.name === emoji.name);
+        if (existing) {
+          console.log(`Emoji ${emoji.name} already exists!`);
+          continue;
+        }
+  
+        // Upload emoji
+        await guild.emojis.create({
+          attachment: emoji.url,
+          name: emoji.name,
+        });
+  
+        console.log(`Uploaded emoji: ${emoji.name}`);
+      }
+  
+    } catch (err) {
+      console.error("Error uploading emojis:", err);
+    }
+  });
+  
 
 client.login(process.env.DISCORD_TOKEN);
