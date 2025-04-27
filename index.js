@@ -4,7 +4,7 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const XP = require('../models/XP');
+const XP = require('./models/XP');
 const config = require('./config.json');
 
 // Declare emojis globally
@@ -185,6 +185,11 @@ client.on('messageCreate', async (message) => {
     \`!info\` — Show bot info.
     \`!ping\` — Check bot latency.
     \`!rank\` — See your XP and level.
+    \`!profile\` — View your profile and stats.
+    \`!pets\` — View your pets.
+    \`!adoptpet\` — Adopt a pet.
+    \`!petinfo\` — Get info about your pet.
+    \`!abandonpet\` — Free your pet.
     \`!quiz\` — Play a Minecraft quiz to earn XP.
     \`!mine\` — Mine for resources and earn XP.
     \`!inventory\` — Check your inventory.
@@ -193,6 +198,11 @@ client.on('messageCreate', async (message) => {
     \`!sell\` — Sell your resources for coins.
     \`!dailychest\` — Claim your daily reward.
     \`!minecoin\` — Check your coin balance.
+    \`jobs\` — View available jobs.
+    \`jobinfo\` — Get info about you accepted job.
+    \`choosejob\` — Choose a job to earn buffs.
+    \`viewtrade\` — View your trades.
+    \`trade\` — Trade items with another user.
         `);
     }
     
