@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 const User = require('../models/user');
 const Pet = require('../models/pet');
-const XP = require('../models/xp'); // XP should be lowercase filename
+const XP = require('../models/XP'); // XP should be lowercase filename
 
 module.exports = {
   name: 'profile',
