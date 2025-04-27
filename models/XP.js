@@ -6,5 +6,4 @@ const xpSchema = new mongoose.Schema({
   level: { type: Number, default: 1 },
 });
 
-// Prevent OverwriteModelError
-module.exports = mongoose.models.XP || mongoose.model('XP', xpSchema);
+module.exports = mongoose.model('XP', xpSchema);  // This should match the import
