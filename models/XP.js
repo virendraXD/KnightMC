@@ -6,5 +6,5 @@ const xpSchema = new mongoose.Schema({
   level: { type: Number, default: 1 },
 });
 
-// Fix OverwriteModelError
-module.exports = mongoose.models.XP || mongoose.model('xp', xpSchema);
+// Prevent OverwriteModelError
+module.exports = mongoose.models.XP || mongoose.model('XP', xpSchema);
