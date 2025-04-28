@@ -122,8 +122,43 @@ client.once('ready', async () => {
 });
 
 // Message handler
-client.on('messageCreate', async (message) => {
-    if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
+    client.on('messageCreate', async (message) => {
+        // Don't process messages from the bot unless it’s the console channel
+        if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
+
+        // Log every incoming message for debugging
+        console.log("Incoming Message:", message.content);
+
+        // Make sure the message is coming from the correct console channel
+        if (message.channel.id === CONSOLE_CHANNEL_ID) {
+            console.log("Message is from the console channel");
+
+            // Normalize message content for easy checking
+            const rawContent = message.content
+                .replace(/```diff/g, '')  // Remove code block markers
+                .replace(/```/g, '')      // Remove any other code block markers
+                .replace(/\s+/g, ' ')     // Replace multiple spaces with one
+                .trim()                   // Remove leading/trailing spaces
+                .toLowerCase();           // Make everything lowercase for easier matching
+
+            // Debug output to see what we got
+            console.log("Processed Console Message:", rawContent);
+
+            // Check if the content includes 'essentials'
+            if (rawContent.includes('essentials')) {
+                console.log("Found the word 'essentials' in the message!");
+
+                try {
+                    // Fetch the owner and send them a message
+                    const owner = await client.users.fetch(process.env.OWNER_ID);
+                    await owner.send('📌 Found the word `essentials` in the console!');
+                    console.log("DM Sent to Owner!");
+                } catch (err) {
+                    console.error("Error sending DM:", err);
+                }
+            }
+        }
+
 
     if (message.content.startsWith(prefix)) {
         const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -212,7 +247,7 @@ client.on('messageCreate', async (message) => {
     **KnightMC Bot Info:**
     - Developed by KnightGost
     - Version: 1.0.0
-    - Features: Minecraft Quiz, XP System, Server Console Monitoring
+    - Features: Minecraft themed game, Minecraft quiz, XP System, Server Console Monitoring
         `);
     }
 
