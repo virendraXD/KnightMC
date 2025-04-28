@@ -122,42 +122,56 @@ client.once('ready', async () => {
 });
 
 // Message handler
-    client.on('messageCreate', async (message) => {
-        // Don't process messages from the bot unless it’s the console channel
-        if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
+ client.on('messageCreate', async (message) => {
+    if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
 
-        // Log every incoming message for debugging
-        console.log("Incoming Message:", message.content);
+    console.log("Incoming Message:", message.content);
 
-        // Make sure the message is coming from the correct console channel
-        if (message.channel.id === CONSOLE_CHANNEL_ID) {
-            console.log("Message is from the console channel");
+    if (message.channel.id === CONSOLE_CHANNEL_ID) {
+        console.log("Message is from the console channel");
 
-            // Normalize message content for easy checking
-            const rawContent = message.content
-                .replace(/```diff/g, '')  // Remove code block markers
-                .replace(/```/g, '')      // Remove any other code block markers
-                .replace(/\s+/g, ' ')     // Replace multiple spaces with one
-                .trim()                   // Remove leading/trailing spaces
-                .toLowerCase();           // Make everything lowercase for easier matching
+        const rawContent = message.content
+            .replace(/```diff/g, '')
+            .replace(/```/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
 
-            // Debug output to see what we got
-            console.log("Processed Console Message:", rawContent);
+        console.log("Processed Console Message:", rawContent);
 
-            // Check if the content includes 'essentials'
-            if (rawContent.includes('essentials')) {
-                console.log("Found the word 'essentials' in the message!");
+        if (rawContent.includes('essentials')) {
+            console.log("Found the word 'essentials' in the message!");
 
-                try {
-                    // Fetch the owner and send them a message
-                    const owner = await client.users.fetch(process.env.OWNER_ID);
-                    await owner.send('📌 Found the word `essentials` in the console!');
-                    console.log("DM Sent to Owner!");
-                } catch (err) {
-                    console.error("Error sending DM:", err);
+            try {
+                // Fetch the guild (server) from the message
+                const guild = message.guild || await client.guilds.fetch(YOUR_GUILD_ID);
+
+                // Fetch the role by name or ID
+                const role = guild.roles.cache.find(r => r.name === "SMP Member");
+                if (!role) {
+                    console.error("Role 'SMP Member' not found!");
+                    return;
                 }
+
+                // Get all members who have the role
+                const membersWithRole = role.members;
+
+                for (const [memberId, member] of membersWithRole) {
+                    try {
+                        await member.send('✅ Minecraft server has started! (Console detected "essentials")');
+                        console.log(`DM sent to ${member.user.username}`);
+                    } catch (err) {
+                        console.error(`Failed to DM ${member.user.tag}:`, err);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error fetching guild or sending DMs:", error);
             }
         }
+    }
+
+
 
 
     if (message.content.startsWith(prefix)) {
