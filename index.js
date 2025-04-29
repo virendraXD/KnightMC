@@ -158,7 +158,7 @@ client.once('ready', async () => {
 
                 for (const [memberId, member] of membersWithRole) {
                     try {
-                        await member.send('✅ Minecraft server has started! (Console detected "essentials")');
+                        await member.send('✅ Minecraft server has started!');
                         console.log(`DM sent to ${member.user.username}`);
                     } catch (err) {
                         console.error(`Failed to DM ${member.user.tag}:`, err);
@@ -170,9 +170,6 @@ client.once('ready', async () => {
             }
         }
     }
-
-
-
 
     if (message.content.startsWith(prefix)) {
         const args = message.content.slice(prefix.length).trim().split(/ +/);
