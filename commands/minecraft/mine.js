@@ -3,7 +3,7 @@ const User = require('../../models/user');
 
 module.exports = {
   name: 'mine',
-
+// minecoins
   async execute(message) {
     try {
       const userId = message.author.id;
@@ -11,7 +11,7 @@ module.exports = {
       let user = await User.findOne({ userId });
 
       if (!user) {
-        user = new User({ userId, coins: 0, inventory: {}, job: null });
+        user = new User({ userId, minecoins: 0, inventory: {}, job: null });
       }
 
       // Apply job-based cooldown reduction
@@ -79,13 +79,13 @@ module.exports = {
       // Coin reward base
       let coinReward = Math.floor(Math.random() * 5) + 1;
 
-      // Blacksmith job bonus: chance to double coins
+      // Blacksmith job bonus: chance to double minecoins
       if (user.job === 'Blacksmith' && Math.random() < 0.2) { // 20% chance
         coinReward *= 2;
       }
 
-      if (!user.coins) user.coins = 0;
-      user.coins += coinReward;
+      if (!user.minecoins) user.minecoins = 0;
+      user.minecoins += coinReward;
 
       // Treasure Hunter bonus: random bonus item chance
       if (user.job === 'Treasure Hunter' && Math.random() < 0.1) { // 10% chance

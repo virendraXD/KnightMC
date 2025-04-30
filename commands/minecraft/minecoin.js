@@ -13,9 +13,9 @@ module.exports = {
       return message.reply("You need to use `!mine` first to create your inventory!");
     }
 
-    // Retrieve the user's Minecoins
-    const coins = user.coins;
+    // Retrieve the user's Mineminecoins
+    const minecoins = user.minecoins;
 
-    return message.reply(`💰 **Your Minecoin Balance**: ${coins} Minecoin(s)`);
+    return message.reply(`💰 **Your Minecoin Balance**: ${minecoins} Minecoin(s)`);
   }
 };

@@ -20,7 +20,7 @@ module.exports = {
 
     const level = userXp ? userXp.level : 1;
     const xp = userXp ? userXp.xp : 0;
-    const minecoins = user.coins || 0;
+    const minecoins = user.minecoins || 0;
 
     // Check if the user has a pet inside the user model
     const petList = user.pets && user.pets.length > 0
