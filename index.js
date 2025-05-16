@@ -121,7 +121,7 @@ client.on('messageCreate', async (message) => {
     if (rawContent.includes('essentials')) {
       try {
         const guild = message.guild || await client.guilds.fetch(process.env.GUILD_ID);
-        const role = guild.roles.cache.find(r => r.name === "SMP Member");
+        const role = guild.roles.cache.find(r => r.name === "Smp log");
         if (!role) return;
 
         for (const [, member] of role.members) {
@@ -132,7 +132,7 @@ client.on('messageCreate', async (message) => {
           }
         }
       } catch (error) {
-        console.error("Error notifying SMP members:", error);
+        console.error("Error notifying Smp log roles:", error);
       }
     }
   }
