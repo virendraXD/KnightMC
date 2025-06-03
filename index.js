@@ -10,7 +10,8 @@ const User = require('./models/user');
 const Inventory = require('./commands/minecraft/inventory');
 const config = require('./config.json');
 
-// Global Emojis
+
+// Global Emojis started
 const emojisToUpload = [
   { name: 'cobblestone', url: 'https://cdn.discordapp.com/emojis/1365620149079773215.png' },
   { name: 'coal', url: 'https://cdn.discordapp.com/emojis/1365620139734728745.png' },
@@ -110,6 +111,10 @@ client.once('ready', async () => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot && message.channel.id !== CONSOLE_CHANNEL_ID) return;
 
+  const keywordsToDetect = ['done', 'for', 'help'];
+  const detectedWords = new Set();
+  let tracking = false;
+
   if (message.channel.id === CONSOLE_CHANNEL_ID) {
     const rawContent = message.content
       .replace(/```diff/g, '')
@@ -118,22 +123,39 @@ client.on('messageCreate', async (message) => {
       .trim()
       .toLowerCase();
 
-    if (rawContent.includes('essentials')) {
-      try {
-        const guild = message.guild || await client.guilds.fetch(process.env.GUILD_ID);
-        const role = guild.roles.cache.find(r => r.name === "Smp log");
-        if (!role) return;
+    for (const word of keywordsToDetect) {
+      if (rawContent.includes(word)) {
+        detectedWords.add(word);
+      }
+    }
 
-        for (const [, member] of role.members) {
+    if (!tracking && detectedWords.size > 0) {
+      tracking = true;
+
+      // Start 30s window
+      setTimeout(async () => {
+        if (keywordsToDetect.every(word => detectedWords.has(word))) {
           try {
-            await member.send('✅ Minecraft server has started!');
-          } catch (err) {
-            console.error(`Failed to DM ${member.user.tag}:`, err);
+            const guild = message.guild || await client.guilds.fetch(process.env.GUILD_ID);
+            const role = guild.roles.cache.find(r => r.name === "Smp log");
+            if (!role) return;
+
+            for (const [, member] of role.members) {
+              try {
+                await member.send('✅ Minecraft server has started!');
+              } catch (err) {
+                console.error(`Failed to DM ${member.user.tag}:`, err);
+              }
+            }
+          } catch (error) {
+            console.error("Error notifying Smp log roles:", error);
           }
         }
-      } catch (error) {
-        console.error("Error notifying Smp log roles:", error);
-      }
+
+        // Reset after 30s
+        detectedWords.clear();
+        tracking = false;
+      }, 30_000);
     }
   }
 
